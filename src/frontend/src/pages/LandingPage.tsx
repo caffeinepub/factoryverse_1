@@ -63,25 +63,6 @@ const steps: {
   },
 ];
 
-const faqs = [
-  {
-    q: "Personel kodu nasıl alınır?",
-    a: 'Personel, "Personel Kaydı" sayfasından kendi kaydını oluşturur ve sistem ona özel bir kod üretir. Bu kodu yöneticiye iletir; yönetici kodu sisteme tanımladıktan sonra personel giriş yapabilir.',
-  },
-  {
-    q: "Şirket kodum kaybolursa ne olur?",
-    a: "Giriş sayfasındaki kodu tekrar girmeniz gerekir. Kodunuzu güvenli bir yerde (e-posta, not uygulaması) saklayın; şu an kod sıfırlama özelliği mevcut değildir.",
-  },
-  {
-    q: "Birden fazla şirket kaydedebilir miyim?",
-    a: "Evet. Her şirket kayıt ayrı bir kod alır. Farklı kodlarla giriş yaparak şirketler arasında geçiş yapabilirsiniz. Veriler birbirinden tamamen izole tutulur.",
-  },
-  {
-    q: "Verilerim nerede saklanıyor?",
-    a: "Tüm veriler Internet Computer (ICP) blok zinciri üzerinde çalışan merkezi olmayan bir altyapıda kalıcı olarak depolanır. Sunucu arızası veya veri kaybı riski minimum düzeydedir.",
-  },
-];
-
 export function LandingPage() {
   const { navigate } = useNavigation();
 
@@ -303,36 +284,6 @@ export function LandingPage() {
                       )}
                     </div>
                   </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* FAQ */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="max-w-2xl mx-auto mb-16"
-          >
-            <div className="text-center mb-8">
-              <h2 className="font-display font-bold text-xl text-white">
-                Sık Sorulan Sorular
-              </h2>
-            </div>
-            <div className="space-y-3">
-              {faqs.map((faq, i) => (
-                <motion.div
-                  key={faq.q}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.7 + i * 0.06 }}
-                  className="bg-white/8 border border-white/12 rounded-xl p-5 text-left"
-                >
-                  <p className="text-white font-medium text-sm mb-2">{faq.q}</p>
-                  <p className="text-white/50 text-sm leading-relaxed">
-                    {faq.a}
-                  </p>
                 </motion.div>
               ))}
             </div>
