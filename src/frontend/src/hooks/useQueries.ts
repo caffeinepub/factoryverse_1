@@ -10,8 +10,11 @@ import type {
   ChemicalRecord,
   ComplaintRecord,
   ContactEntry,
+  EmployeePerfReview,
   EnergyEfficiencyTarget,
+  EquipmentMaintenanceHistory,
   EquipmentRental,
+  InspectionRecord,
   InsurancePolicy,
   JobApplication,
   MaintenanceCostRecord,
@@ -29,6 +32,7 @@ import type {
   StockCountRecord,
   SubcontractorJob,
   Supplier,
+  SupplierOrder,
   TrainingProgramRecord,
   VehicleRecord,
   WarrantyRecord,
@@ -4684,5 +4688,1546 @@ export function useDeleteProjectRiskItem() {
     },
     onSuccess: (_d, v) =>
       qc.invalidateQueries({ queryKey: ["projectRiskItems", v.companyId] }),
+  });
+}
+
+// ===== EQUIPMENT MAINTENANCE HISTORY =====
+export function useGetEquipmentMaintenanceHistory(companyId: string | null) {
+  return useQuery<EquipmentMaintenanceHistory[]>({
+    queryKey: ["equipmentMaintenanceHistory", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<EquipmentMaintenanceHistory>(
+        lsKey("equipmentMaintenanceHistory", companyId),
+      );
+    },
+  });
+}
+export function useAddEquipmentMaintenanceHistory() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (
+      p: Omit<EquipmentMaintenanceHistory, "id" | "createdAt">,
+    ) => {
+      const all = lsGet<EquipmentMaintenanceHistory>(
+        lsKey("equipmentMaintenanceHistory", p.companyId),
+      );
+      const rec: EquipmentMaintenanceHistory = {
+        ...p,
+        id: crypto.randomUUID(),
+        createdAt: Date.now(),
+      };
+      lsSet(lsKey("equipmentMaintenanceHistory", p.companyId), [...all, rec]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({
+        queryKey: ["equipmentMaintenanceHistory", v.companyId],
+      }),
+  });
+}
+export function useUpdateEquipmentMaintenanceHistory() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: EquipmentMaintenanceHistory) => {
+      const all = lsGet<EquipmentMaintenanceHistory>(
+        lsKey("equipmentMaintenanceHistory", p.companyId),
+      );
+      lsSet(
+        lsKey("equipmentMaintenanceHistory", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({
+        queryKey: ["equipmentMaintenanceHistory", v.companyId],
+      }),
+  });
+}
+export function useDeleteEquipmentMaintenanceHistory() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<EquipmentMaintenanceHistory>(
+        lsKey("equipmentMaintenanceHistory", p.companyId),
+      );
+      lsSet(
+        lsKey("equipmentMaintenanceHistory", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({
+        queryKey: ["equipmentMaintenanceHistory", v.companyId],
+      }),
+  });
+}
+
+// ===== EMPLOYEE PERFORMANCE REVIEW =====
+export function useGetEmployeePerfReviews(companyId: string | null) {
+  return useQuery<EmployeePerfReview[]>({
+    queryKey: ["employeePerfReviews", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<EmployeePerfReview>(lsKey("employeePerfReviews", companyId));
+    },
+  });
+}
+export function useAddEmployeePerfReview() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: Omit<EmployeePerfReview, "id" | "createdAt">) => {
+      const all = lsGet<EmployeePerfReview>(
+        lsKey("employeePerfReviews", p.companyId),
+      );
+      const rec: EmployeePerfReview = {
+        ...p,
+        id: crypto.randomUUID(),
+        createdAt: Date.now(),
+      };
+      lsSet(lsKey("employeePerfReviews", p.companyId), [...all, rec]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["employeePerfReviews", v.companyId] }),
+  });
+}
+export function useUpdateEmployeePerfReview() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: EmployeePerfReview) => {
+      const all = lsGet<EmployeePerfReview>(
+        lsKey("employeePerfReviews", p.companyId),
+      );
+      lsSet(
+        lsKey("employeePerfReviews", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["employeePerfReviews", v.companyId] }),
+  });
+}
+export function useDeleteEmployeePerfReview() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<EmployeePerfReview>(
+        lsKey("employeePerfReviews", p.companyId),
+      );
+      lsSet(
+        lsKey("employeePerfReviews", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["employeePerfReviews", v.companyId] }),
+  });
+}
+
+// ===== SUPPLIER ORDERS =====
+export function useGetSupplierOrders(companyId: string | null) {
+  return useQuery<SupplierOrder[]>({
+    queryKey: ["supplierOrders", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<SupplierOrder>(lsKey("supplierOrders", companyId));
+    },
+  });
+}
+export function useAddSupplierOrder() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: Omit<SupplierOrder, "id" | "createdAt">) => {
+      const all = lsGet<SupplierOrder>(lsKey("supplierOrders", p.companyId));
+      const rec: SupplierOrder = {
+        ...p,
+        id: crypto.randomUUID(),
+        createdAt: Date.now(),
+      };
+      lsSet(lsKey("supplierOrders", p.companyId), [...all, rec]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["supplierOrders", v.companyId] }),
+  });
+}
+export function useUpdateSupplierOrder() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: SupplierOrder) => {
+      const all = lsGet<SupplierOrder>(lsKey("supplierOrders", p.companyId));
+      lsSet(
+        lsKey("supplierOrders", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["supplierOrders", v.companyId] }),
+  });
+}
+export function useDeleteSupplierOrder() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<SupplierOrder>(lsKey("supplierOrders", p.companyId));
+      lsSet(
+        lsKey("supplierOrders", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["supplierOrders", v.companyId] }),
+  });
+}
+
+// ===== INSPECTION RECORDS =====
+export function useGetInspectionRecords(companyId: string | null) {
+  return useQuery<InspectionRecord[]>({
+    queryKey: ["inspectionRecords", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<InspectionRecord>(lsKey("inspectionRecords", companyId));
+    },
+  });
+}
+export function useAddInspectionRecord() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: Omit<InspectionRecord, "id" | "createdAt">) => {
+      const all = lsGet<InspectionRecord>(
+        lsKey("inspectionRecords", p.companyId),
+      );
+      const rec: InspectionRecord = {
+        ...p,
+        id: crypto.randomUUID(),
+        createdAt: Date.now(),
+      };
+      lsSet(lsKey("inspectionRecords", p.companyId), [...all, rec]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["inspectionRecords", v.companyId] }),
+  });
+}
+export function useUpdateInspectionRecord() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: InspectionRecord) => {
+      const all = lsGet<InspectionRecord>(
+        lsKey("inspectionRecords", p.companyId),
+      );
+      lsSet(
+        lsKey("inspectionRecords", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["inspectionRecords", v.companyId] }),
+  });
+}
+export function useDeleteInspectionRecord() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<InspectionRecord>(
+        lsKey("inspectionRecords", p.companyId),
+      );
+      lsSet(
+        lsKey("inspectionRecords", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["inspectionRecords", v.companyId] }),
+  });
+}
+
+// ===== LEASE RECORDS =====
+export function useGetLeaseRecords(companyId: string | null) {
+  return useQuery<import("../types").LeaseRecord[]>({
+    queryKey: ["leaseRecords", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<import("../types").LeaseRecord>(
+        lsKey("leaseRecords", companyId),
+      );
+    },
+  });
+}
+export function useAddLeaseRecord() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (
+      p: Omit<import("../types").LeaseRecord, "id" | "createdAt">,
+    ) => {
+      const all = lsGet<import("../types").LeaseRecord>(
+        lsKey("leaseRecords", p.companyId),
+      );
+      lsSet(lsKey("leaseRecords", p.companyId), [
+        ...all,
+        { ...p, id: crypto.randomUUID(), createdAt: Date.now() },
+      ]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["leaseRecords", v.companyId] }),
+  });
+}
+export function useUpdateLeaseRecord() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: import("../types").LeaseRecord) => {
+      const all = lsGet<import("../types").LeaseRecord>(
+        lsKey("leaseRecords", p.companyId),
+      );
+      lsSet(
+        lsKey("leaseRecords", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["leaseRecords", v.companyId] }),
+  });
+}
+export function useDeleteLeaseRecord() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<import("../types").LeaseRecord>(
+        lsKey("leaseRecords", p.companyId),
+      );
+      lsSet(
+        lsKey("leaseRecords", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["leaseRecords", v.companyId] }),
+  });
+}
+
+// ===== SKILL MATRIX =====
+export function useGetSkillMatrixRecords(companyId: string | null) {
+  return useQuery<import("../types").SkillMatrixRecord[]>({
+    queryKey: ["skillMatrix", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<import("../types").SkillMatrixRecord>(
+        lsKey("skillMatrix", companyId),
+      );
+    },
+  });
+}
+export function useAddSkillMatrixRecord() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (
+      p: Omit<import("../types").SkillMatrixRecord, "id" | "createdAt">,
+    ) => {
+      const all = lsGet<import("../types").SkillMatrixRecord>(
+        lsKey("skillMatrix", p.companyId),
+      );
+      lsSet(lsKey("skillMatrix", p.companyId), [
+        ...all,
+        { ...p, id: crypto.randomUUID(), createdAt: Date.now() },
+      ]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["skillMatrix", v.companyId] }),
+  });
+}
+export function useUpdateSkillMatrixRecord() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: import("../types").SkillMatrixRecord) => {
+      const all = lsGet<import("../types").SkillMatrixRecord>(
+        lsKey("skillMatrix", p.companyId),
+      );
+      lsSet(
+        lsKey("skillMatrix", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["skillMatrix", v.companyId] }),
+  });
+}
+export function useDeleteSkillMatrixRecord() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<import("../types").SkillMatrixRecord>(
+        lsKey("skillMatrix", p.companyId),
+      );
+      lsSet(
+        lsKey("skillMatrix", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["skillMatrix", v.companyId] }),
+  });
+}
+
+// ===== MTBF RECORDS =====
+export function useGetMTBFRecords(companyId: string | null) {
+  return useQuery<import("../types").MTBFRecord[]>({
+    queryKey: ["mtbfRecords", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<import("../types").MTBFRecord>(
+        lsKey("mtbfRecords", companyId),
+      );
+    },
+  });
+}
+export function useAddMTBFRecord() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (
+      p: Omit<import("../types").MTBFRecord, "id" | "createdAt">,
+    ) => {
+      const all = lsGet<import("../types").MTBFRecord>(
+        lsKey("mtbfRecords", p.companyId),
+      );
+      lsSet(lsKey("mtbfRecords", p.companyId), [
+        ...all,
+        { ...p, id: crypto.randomUUID(), createdAt: Date.now() },
+      ]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["mtbfRecords", v.companyId] }),
+  });
+}
+export function useUpdateMTBFRecord() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: import("../types").MTBFRecord) => {
+      const all = lsGet<import("../types").MTBFRecord>(
+        lsKey("mtbfRecords", p.companyId),
+      );
+      lsSet(
+        lsKey("mtbfRecords", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["mtbfRecords", v.companyId] }),
+  });
+}
+export function useDeleteMTBFRecord() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<import("../types").MTBFRecord>(
+        lsKey("mtbfRecords", p.companyId),
+      );
+      lsSet(
+        lsKey("mtbfRecords", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["mtbfRecords", v.companyId] }),
+  });
+}
+
+// ===== SHIFT REPORTS =====
+export function useGetShiftReports(companyId: string | null) {
+  return useQuery<import("../types").ShiftReportRecord[]>({
+    queryKey: ["shiftReports", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<import("../types").ShiftReportRecord>(
+        lsKey("shiftReports", companyId),
+      );
+    },
+  });
+}
+export function useAddShiftReport() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (
+      p: Omit<import("../types").ShiftReportRecord, "id" | "createdAt">,
+    ) => {
+      const all = lsGet<import("../types").ShiftReportRecord>(
+        lsKey("shiftReports", p.companyId),
+      );
+      lsSet(lsKey("shiftReports", p.companyId), [
+        ...all,
+        { ...p, id: crypto.randomUUID(), createdAt: Date.now() },
+      ]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["shiftReports", v.companyId] }),
+  });
+}
+export function useUpdateShiftReport() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: import("../types").ShiftReportRecord) => {
+      const all = lsGet<import("../types").ShiftReportRecord>(
+        lsKey("shiftReports", p.companyId),
+      );
+      lsSet(
+        lsKey("shiftReports", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["shiftReports", v.companyId] }),
+  });
+}
+export function useDeleteShiftReport() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<import("../types").ShiftReportRecord>(
+        lsKey("shiftReports", p.companyId),
+      );
+      lsSet(
+        lsKey("shiftReports", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["shiftReports", v.companyId] }),
+  });
+}
+
+// ===== MAINTENANCE BUDGETS =====
+export function useGetMaintenanceBudgets(companyId: string | null) {
+  return useQuery<import("../types").MaintenanceBudgetRecord[]>({
+    queryKey: ["maintenanceBudgets", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<import("../types").MaintenanceBudgetRecord>(
+        lsKey("maintenanceBudgets", companyId),
+      );
+    },
+  });
+}
+export function useAddMaintenanceBudget() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (
+      p: Omit<import("../types").MaintenanceBudgetRecord, "id" | "createdAt">,
+    ) => {
+      const all = lsGet<import("../types").MaintenanceBudgetRecord>(
+        lsKey("maintenanceBudgets", p.companyId),
+      );
+      lsSet(lsKey("maintenanceBudgets", p.companyId), [
+        ...all,
+        { ...p, id: crypto.randomUUID(), createdAt: Date.now() },
+      ]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["maintenanceBudgets", v.companyId] }),
+  });
+}
+export function useUpdateMaintenanceBudget() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: import("../types").MaintenanceBudgetRecord) => {
+      const all = lsGet<import("../types").MaintenanceBudgetRecord>(
+        lsKey("maintenanceBudgets", p.companyId),
+      );
+      lsSet(
+        lsKey("maintenanceBudgets", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["maintenanceBudgets", v.companyId] }),
+  });
+}
+export function useDeleteMaintenanceBudget() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<import("../types").MaintenanceBudgetRecord>(
+        lsKey("maintenanceBudgets", p.companyId),
+      );
+      lsSet(
+        lsKey("maintenanceBudgets", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["maintenanceBudgets", v.companyId] }),
+  });
+}
+
+// ===== QC FORMS =====
+export function useGetQCForms(companyId: string | null) {
+  return useQuery<import("../types").QCFormRecord[]>({
+    queryKey: ["qcForms", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<import("../types").QCFormRecord>(
+        lsKey("qcForms", companyId),
+      );
+    },
+  });
+}
+export function useAddQCForm() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (
+      p: Omit<import("../types").QCFormRecord, "id" | "createdAt">,
+    ) => {
+      const all = lsGet<import("../types").QCFormRecord>(
+        lsKey("qcForms", p.companyId),
+      );
+      lsSet(lsKey("qcForms", p.companyId), [
+        ...all,
+        { ...p, id: crypto.randomUUID(), createdAt: Date.now() },
+      ]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["qcForms", v.companyId] }),
+  });
+}
+export function useUpdateQCForm() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: import("../types").QCFormRecord) => {
+      const all = lsGet<import("../types").QCFormRecord>(
+        lsKey("qcForms", p.companyId),
+      );
+      lsSet(
+        lsKey("qcForms", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["qcForms", v.companyId] }),
+  });
+}
+export function useDeleteQCForm() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<import("../types").QCFormRecord>(
+        lsKey("qcForms", p.companyId),
+      );
+      lsSet(
+        lsKey("qcForms", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["qcForms", v.companyId] }),
+  });
+}
+
+// ===== FIELD AUDITS =====
+export function useGetFieldAudits(companyId: string | null) {
+  return useQuery<import("../types").FieldAuditRecord[]>({
+    queryKey: ["fieldAudits", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<import("../types").FieldAuditRecord>(
+        lsKey("fieldAudits", companyId),
+      );
+    },
+  });
+}
+export function useAddFieldAudit() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (
+      p: Omit<import("../types").FieldAuditRecord, "id" | "createdAt">,
+    ) => {
+      const all = lsGet<import("../types").FieldAuditRecord>(
+        lsKey("fieldAudits", p.companyId),
+      );
+      lsSet(lsKey("fieldAudits", p.companyId), [
+        ...all,
+        { ...p, id: crypto.randomUUID(), createdAt: Date.now() },
+      ]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["fieldAudits", v.companyId] }),
+  });
+}
+export function useUpdateFieldAudit() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: import("../types").FieldAuditRecord) => {
+      const all = lsGet<import("../types").FieldAuditRecord>(
+        lsKey("fieldAudits", p.companyId),
+      );
+      lsSet(
+        lsKey("fieldAudits", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["fieldAudits", v.companyId] }),
+  });
+}
+export function useDeleteFieldAudit() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<import("../types").FieldAuditRecord>(
+        lsKey("fieldAudits", p.companyId),
+      );
+      lsSet(
+        lsKey("fieldAudits", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["fieldAudits", v.companyId] }),
+  });
+}
+
+// ===== SATISFACTION SURVEYS =====
+export function useGetSatisfactionSurveys(companyId: string | null) {
+  return useQuery<import("../types").SatisfactionSurveyRecord[]>({
+    queryKey: ["satisfactionSurveys", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<import("../types").SatisfactionSurveyRecord>(
+        lsKey("satisfactionSurveys", companyId),
+      );
+    },
+  });
+}
+export function useAddSatisfactionSurvey() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (
+      p: Omit<import("../types").SatisfactionSurveyRecord, "id" | "createdAt">,
+    ) => {
+      const all = lsGet<import("../types").SatisfactionSurveyRecord>(
+        lsKey("satisfactionSurveys", p.companyId),
+      );
+      lsSet(lsKey("satisfactionSurveys", p.companyId), [
+        ...all,
+        { ...p, id: crypto.randomUUID(), createdAt: Date.now() },
+      ]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["satisfactionSurveys", v.companyId] }),
+  });
+}
+export function useUpdateSatisfactionSurvey() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: import("../types").SatisfactionSurveyRecord) => {
+      const all = lsGet<import("../types").SatisfactionSurveyRecord>(
+        lsKey("satisfactionSurveys", p.companyId),
+      );
+      lsSet(
+        lsKey("satisfactionSurveys", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["satisfactionSurveys", v.companyId] }),
+  });
+}
+export function useDeleteSatisfactionSurvey() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<import("../types").SatisfactionSurveyRecord>(
+        lsKey("satisfactionSurveys", p.companyId),
+      );
+      lsSet(
+        lsKey("satisfactionSurveys", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["satisfactionSurveys", v.companyId] }),
+  });
+}
+
+// ===== ELEC/MECH PROJECTS =====
+export function useGetElecMechProjects(companyId: string | null) {
+  return useQuery<import("../types").ElecMechProjectRecord[]>({
+    queryKey: ["elecMechProjects", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<import("../types").ElecMechProjectRecord>(
+        lsKey("elecMechProjects", companyId),
+      );
+    },
+  });
+}
+export function useAddElecMechProject() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (
+      p: Omit<import("../types").ElecMechProjectRecord, "id" | "createdAt">,
+    ) => {
+      const all = lsGet<import("../types").ElecMechProjectRecord>(
+        lsKey("elecMechProjects", p.companyId),
+      );
+      lsSet(lsKey("elecMechProjects", p.companyId), [
+        ...all,
+        { ...p, id: crypto.randomUUID(), createdAt: Date.now() },
+      ]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["elecMechProjects", v.companyId] }),
+  });
+}
+export function useUpdateElecMechProject() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: import("../types").ElecMechProjectRecord) => {
+      const all = lsGet<import("../types").ElecMechProjectRecord>(
+        lsKey("elecMechProjects", p.companyId),
+      );
+      lsSet(
+        lsKey("elecMechProjects", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["elecMechProjects", v.companyId] }),
+  });
+}
+export function useDeleteElecMechProject() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<import("../types").ElecMechProjectRecord>(
+        lsKey("elecMechProjects", p.companyId),
+      );
+      lsSet(
+        lsKey("elecMechProjects", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["elecMechProjects", v.companyId] }),
+  });
+}
+
+// ===== GENERAL EXPENSES =====
+export function useGetGeneralExpenses(companyId: string | null) {
+  return useQuery<import("../types").GeneralExpenseRecord[]>({
+    queryKey: ["generalExpenses", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<import("../types").GeneralExpenseRecord>(
+        lsKey("generalExpenses", companyId),
+      );
+    },
+  });
+}
+export function useAddGeneralExpense() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (
+      p: Omit<import("../types").GeneralExpenseRecord, "id" | "createdAt">,
+    ) => {
+      const all = lsGet<import("../types").GeneralExpenseRecord>(
+        lsKey("generalExpenses", p.companyId),
+      );
+      lsSet(lsKey("generalExpenses", p.companyId), [
+        ...all,
+        { ...p, id: crypto.randomUUID(), createdAt: Date.now() },
+      ]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["generalExpenses", v.companyId] }),
+  });
+}
+export function useUpdateGeneralExpense() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: import("../types").GeneralExpenseRecord) => {
+      const all = lsGet<import("../types").GeneralExpenseRecord>(
+        lsKey("generalExpenses", p.companyId),
+      );
+      lsSet(
+        lsKey("generalExpenses", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["generalExpenses", v.companyId] }),
+  });
+}
+export function useDeleteGeneralExpense() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<import("../types").GeneralExpenseRecord>(
+        lsKey("generalExpenses", p.companyId),
+      );
+      lsSet(
+        lsKey("generalExpenses", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["generalExpenses", v.companyId] }),
+  });
+}
+
+// ===== MATERIAL CERTS =====
+export function useGetMaterialCerts(companyId: string | null) {
+  return useQuery<import("../types").MaterialCertRecord[]>({
+    queryKey: ["materialCerts", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<import("../types").MaterialCertRecord>(
+        lsKey("materialCerts", companyId),
+      );
+    },
+  });
+}
+export function useAddMaterialCert() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (
+      p: Omit<import("../types").MaterialCertRecord, "id" | "createdAt">,
+    ) => {
+      const all = lsGet<import("../types").MaterialCertRecord>(
+        lsKey("materialCerts", p.companyId),
+      );
+      lsSet(lsKey("materialCerts", p.companyId), [
+        ...all,
+        { ...p, id: crypto.randomUUID(), createdAt: Date.now() },
+      ]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["materialCerts", v.companyId] }),
+  });
+}
+export function useUpdateMaterialCert() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: import("../types").MaterialCertRecord) => {
+      const all = lsGet<import("../types").MaterialCertRecord>(
+        lsKey("materialCerts", p.companyId),
+      );
+      lsSet(
+        lsKey("materialCerts", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["materialCerts", v.companyId] }),
+  });
+}
+export function useDeleteMaterialCert() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<import("../types").MaterialCertRecord>(
+        lsKey("materialCerts", p.companyId),
+      );
+      lsSet(
+        lsKey("materialCerts", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["materialCerts", v.companyId] }),
+  });
+}
+
+// ===== PRODUCTION QUALITY =====
+export function useGetProductionQuality(companyId: string | null) {
+  return useQuery<import("../types").ProductionQualityRecord[]>({
+    queryKey: ["productionQuality", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<import("../types").ProductionQualityRecord>(
+        lsKey("productionQuality", companyId),
+      );
+    },
+  });
+}
+export function useAddProductionQuality() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (
+      p: Omit<import("../types").ProductionQualityRecord, "id" | "createdAt">,
+    ) => {
+      const all = lsGet<import("../types").ProductionQualityRecord>(
+        lsKey("productionQuality", p.companyId),
+      );
+      lsSet(lsKey("productionQuality", p.companyId), [
+        ...all,
+        { ...p, id: crypto.randomUUID(), createdAt: Date.now() },
+      ]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["productionQuality", v.companyId] }),
+  });
+}
+export function useUpdateProductionQuality() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: import("../types").ProductionQualityRecord) => {
+      const all = lsGet<import("../types").ProductionQualityRecord>(
+        lsKey("productionQuality", p.companyId),
+      );
+      lsSet(
+        lsKey("productionQuality", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["productionQuality", v.companyId] }),
+  });
+}
+export function useDeleteProductionQuality() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<import("../types").ProductionQualityRecord>(
+        lsKey("productionQuality", p.companyId),
+      );
+      lsSet(
+        lsKey("productionQuality", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["productionQuality", v.companyId] }),
+  });
+}
+
+// ===== WASTE DISPOSALS =====
+export function useGetWasteDisposals(companyId: string | null) {
+  return useQuery<import("../types").WasteDisposalRecord[]>({
+    queryKey: ["wasteDisposals", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<import("../types").WasteDisposalRecord>(
+        lsKey("wasteDisposals", companyId),
+      );
+    },
+  });
+}
+export function useAddWasteDisposal() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (
+      p: Omit<import("../types").WasteDisposalRecord, "id" | "createdAt">,
+    ) => {
+      const all = lsGet<import("../types").WasteDisposalRecord>(
+        lsKey("wasteDisposals", p.companyId),
+      );
+      lsSet(lsKey("wasteDisposals", p.companyId), [
+        ...all,
+        { ...p, id: crypto.randomUUID(), createdAt: Date.now() },
+      ]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["wasteDisposals", v.companyId] }),
+  });
+}
+export function useUpdateWasteDisposal() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: import("../types").WasteDisposalRecord) => {
+      const all = lsGet<import("../types").WasteDisposalRecord>(
+        lsKey("wasteDisposals", p.companyId),
+      );
+      lsSet(
+        lsKey("wasteDisposals", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["wasteDisposals", v.companyId] }),
+  });
+}
+export function useDeleteWasteDisposal() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<import("../types").WasteDisposalRecord>(
+        lsKey("wasteDisposals", p.companyId),
+      );
+      lsSet(
+        lsKey("wasteDisposals", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["wasteDisposals", v.companyId] }),
+  });
+}
+
+// ===== PERSONNEL AUTHS =====
+export function useGetPersonnelAuths(companyId: string | null) {
+  return useQuery<import("../types").PersonnelAuthRecord[]>({
+    queryKey: ["personnelAuths", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<import("../types").PersonnelAuthRecord>(
+        lsKey("personnelAuths", companyId),
+      );
+    },
+  });
+}
+export function useAddPersonnelAuth() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (
+      p: Omit<import("../types").PersonnelAuthRecord, "id" | "createdAt">,
+    ) => {
+      const all = lsGet<import("../types").PersonnelAuthRecord>(
+        lsKey("personnelAuths", p.companyId),
+      );
+      lsSet(lsKey("personnelAuths", p.companyId), [
+        ...all,
+        { ...p, id: crypto.randomUUID(), createdAt: Date.now() },
+      ]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["personnelAuths", v.companyId] }),
+  });
+}
+export function useUpdatePersonnelAuth() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: import("../types").PersonnelAuthRecord) => {
+      const all = lsGet<import("../types").PersonnelAuthRecord>(
+        lsKey("personnelAuths", p.companyId),
+      );
+      lsSet(
+        lsKey("personnelAuths", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["personnelAuths", v.companyId] }),
+  });
+}
+export function useDeletePersonnelAuth() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<import("../types").PersonnelAuthRecord>(
+        lsKey("personnelAuths", p.companyId),
+      );
+      lsSet(
+        lsKey("personnelAuths", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["personnelAuths", v.companyId] }),
+  });
+}
+
+// ===== FACILITY DAMAGES =====
+export function useGetFacilityDamages(companyId: string | null) {
+  return useQuery<import("../types").FacilityDamageRecord[]>({
+    queryKey: ["facilityDamages", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<import("../types").FacilityDamageRecord>(
+        lsKey("facilityDamages", companyId),
+      );
+    },
+  });
+}
+export function useAddFacilityDamage() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (
+      p: Omit<import("../types").FacilityDamageRecord, "id" | "createdAt">,
+    ) => {
+      const all = lsGet<import("../types").FacilityDamageRecord>(
+        lsKey("facilityDamages", p.companyId),
+      );
+      lsSet(lsKey("facilityDamages", p.companyId), [
+        ...all,
+        { ...p, id: crypto.randomUUID(), createdAt: Date.now() },
+      ]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["facilityDamages", v.companyId] }),
+  });
+}
+export function useUpdateFacilityDamage() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: import("../types").FacilityDamageRecord) => {
+      const all = lsGet<import("../types").FacilityDamageRecord>(
+        lsKey("facilityDamages", p.companyId),
+      );
+      lsSet(
+        lsKey("facilityDamages", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["facilityDamages", v.companyId] }),
+  });
+}
+export function useDeleteFacilityDamage() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<import("../types").FacilityDamageRecord>(
+        lsKey("facilityDamages", p.companyId),
+      );
+      lsSet(
+        lsKey("facilityDamages", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["facilityDamages", v.companyId] }),
+  });
+}
+
+// ===== PROJECT CHANGES =====
+export function useGetProjectChanges(companyId: string | null) {
+  return useQuery<import("../types").ProjectChangeRecord[]>({
+    queryKey: ["projectChanges", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<import("../types").ProjectChangeRecord>(
+        lsKey("projectChanges", companyId),
+      );
+    },
+  });
+}
+export function useAddProjectChange() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (
+      p: Omit<import("../types").ProjectChangeRecord, "id" | "createdAt">,
+    ) => {
+      const all = lsGet<import("../types").ProjectChangeRecord>(
+        lsKey("projectChanges", p.companyId),
+      );
+      lsSet(lsKey("projectChanges", p.companyId), [
+        ...all,
+        { ...p, id: crypto.randomUUID(), createdAt: Date.now() },
+      ]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["projectChanges", v.companyId] }),
+  });
+}
+export function useUpdateProjectChange() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: import("../types").ProjectChangeRecord) => {
+      const all = lsGet<import("../types").ProjectChangeRecord>(
+        lsKey("projectChanges", p.companyId),
+      );
+      lsSet(
+        lsKey("projectChanges", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["projectChanges", v.companyId] }),
+  });
+}
+export function useDeleteProjectChange() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<import("../types").ProjectChangeRecord>(
+        lsKey("projectChanges", p.companyId),
+      );
+      lsSet(
+        lsKey("projectChanges", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["projectChanges", v.companyId] }),
+  });
+}
+
+// ===== DOKÜMAN REVİZYON TAKİBİ =====
+export function useGetDocRevisions(companyId: string | null) {
+  return useQuery<import("../types").DocRevisionRecord[]>({
+    queryKey: ["docRevisions", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<import("../types").DocRevisionRecord>(
+        lsKey("docRevisions", companyId),
+      );
+    },
+  });
+}
+export function useAddDocRevision() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (
+      p: Omit<import("../types").DocRevisionRecord, "id" | "createdAt">,
+    ) => {
+      const all = lsGet<import("../types").DocRevisionRecord>(
+        lsKey("docRevisions", p.companyId),
+      );
+      lsSet(lsKey("docRevisions", p.companyId), [
+        ...all,
+        { ...p, id: crypto.randomUUID(), createdAt: Date.now() },
+      ]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["docRevisions", v.companyId] }),
+  });
+}
+export function useUpdateDocRevision() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: import("../types").DocRevisionRecord) => {
+      const all = lsGet<import("../types").DocRevisionRecord>(
+        lsKey("docRevisions", p.companyId),
+      );
+      lsSet(
+        lsKey("docRevisions", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["docRevisions", v.companyId] }),
+  });
+}
+export function useDeleteDocRevision() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<import("../types").DocRevisionRecord>(
+        lsKey("docRevisions", p.companyId),
+      );
+      lsSet(
+        lsKey("docRevisions", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["docRevisions", v.companyId] }),
+  });
+}
+
+// ===== EKİPMAN ÖMÜR TAKİBİ =====
+export function useGetEquipmentLifecycles(companyId: string | null) {
+  return useQuery<import("../types").EquipmentLifecycleRecord[]>({
+    queryKey: ["equipmentLifecycles", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<import("../types").EquipmentLifecycleRecord>(
+        lsKey("equipmentLifecycles", companyId),
+      );
+    },
+  });
+}
+export function useAddEquipmentLifecycle() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (
+      p: Omit<import("../types").EquipmentLifecycleRecord, "id" | "createdAt">,
+    ) => {
+      const all = lsGet<import("../types").EquipmentLifecycleRecord>(
+        lsKey("equipmentLifecycles", p.companyId),
+      );
+      lsSet(lsKey("equipmentLifecycles", p.companyId), [
+        ...all,
+        { ...p, id: crypto.randomUUID(), createdAt: Date.now() },
+      ]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["equipmentLifecycles", v.companyId] }),
+  });
+}
+export function useUpdateEquipmentLifecycle() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: import("../types").EquipmentLifecycleRecord) => {
+      const all = lsGet<import("../types").EquipmentLifecycleRecord>(
+        lsKey("equipmentLifecycles", p.companyId),
+      );
+      lsSet(
+        lsKey("equipmentLifecycles", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["equipmentLifecycles", v.companyId] }),
+  });
+}
+export function useDeleteEquipmentLifecycle() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<import("../types").EquipmentLifecycleRecord>(
+        lsKey("equipmentLifecycles", p.companyId),
+      );
+      lsSet(
+        lsKey("equipmentLifecycles", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["equipmentLifecycles", v.companyId] }),
+  });
+}
+
+// ===== PERSONEL GÖREV DEVRİ =====
+export function useGetPersonnelHandovers(companyId: string | null) {
+  return useQuery<import("../types").PersonnelHandoverRecord[]>({
+    queryKey: ["personnelHandovers", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<import("../types").PersonnelHandoverRecord>(
+        lsKey("personnelHandovers", companyId),
+      );
+    },
+  });
+}
+export function useAddPersonnelHandover() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (
+      p: Omit<import("../types").PersonnelHandoverRecord, "id" | "createdAt">,
+    ) => {
+      const all = lsGet<import("../types").PersonnelHandoverRecord>(
+        lsKey("personnelHandovers", p.companyId),
+      );
+      lsSet(lsKey("personnelHandovers", p.companyId), [
+        ...all,
+        { ...p, id: crypto.randomUUID(), createdAt: Date.now() },
+      ]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["personnelHandovers", v.companyId] }),
+  });
+}
+export function useUpdatePersonnelHandover() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: import("../types").PersonnelHandoverRecord) => {
+      const all = lsGet<import("../types").PersonnelHandoverRecord>(
+        lsKey("personnelHandovers", p.companyId),
+      );
+      lsSet(
+        lsKey("personnelHandovers", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["personnelHandovers", v.companyId] }),
+  });
+}
+export function useDeletePersonnelHandover() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<import("../types").PersonnelHandoverRecord>(
+        lsKey("personnelHandovers", p.companyId),
+      );
+      lsSet(
+        lsKey("personnelHandovers", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["personnelHandovers", v.companyId] }),
+  });
+}
+
+// ===== TESİS BAKIM PLANI =====
+export function useGetFacilityMaintenancePlans(companyId: string | null) {
+  return useQuery<import("../types").FacilityMaintenancePlanRecord[]>({
+    queryKey: ["facilityMaintenancePlans", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<import("../types").FacilityMaintenancePlanRecord>(
+        lsKey("facilityMaintenancePlans", companyId),
+      );
+    },
+  });
+}
+export function useAddFacilityMaintenancePlan() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (
+      p: Omit<
+        import("../types").FacilityMaintenancePlanRecord,
+        "id" | "createdAt"
+      >,
+    ) => {
+      const all = lsGet<import("../types").FacilityMaintenancePlanRecord>(
+        lsKey("facilityMaintenancePlans", p.companyId),
+      );
+      lsSet(lsKey("facilityMaintenancePlans", p.companyId), [
+        ...all,
+        { ...p, id: crypto.randomUUID(), createdAt: Date.now() },
+      ]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({
+        queryKey: ["facilityMaintenancePlans", v.companyId],
+      }),
+  });
+}
+export function useUpdateFacilityMaintenancePlan() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: import("../types").FacilityMaintenancePlanRecord) => {
+      const all = lsGet<import("../types").FacilityMaintenancePlanRecord>(
+        lsKey("facilityMaintenancePlans", p.companyId),
+      );
+      lsSet(
+        lsKey("facilityMaintenancePlans", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({
+        queryKey: ["facilityMaintenancePlans", v.companyId],
+      }),
+  });
+}
+export function useDeleteFacilityMaintenancePlan() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<import("../types").FacilityMaintenancePlanRecord>(
+        lsKey("facilityMaintenancePlans", p.companyId),
+      );
+      lsSet(
+        lsKey("facilityMaintenancePlans", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({
+        queryKey: ["facilityMaintenancePlans", v.companyId],
+      }),
   });
 }

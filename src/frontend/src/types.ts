@@ -871,3 +871,459 @@ export interface ProjectRiskItem {
   notes: string;
   createdAt: number;
 }
+
+export interface EquipmentMaintenanceHistory {
+  id: string;
+  companyId: string;
+  equipmentName: string;
+  equipmentCode: string;
+  maintenanceType: string;
+  maintenanceDate: string;
+  performedBy: string;
+  duration: string;
+  cost: string;
+  partsReplaced: string;
+  description: string;
+  nextMaintenanceDate: string;
+  status: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface EmployeePerfReview {
+  id: string;
+  companyId: string;
+  employeeName: string;
+  department: string;
+  position: string;
+  reviewPeriod: string;
+  reviewDate: string;
+  reviewer: string;
+  targetScore: string;
+  actualScore: string;
+  technicalScore: string;
+  behaviorScore: string;
+  teamworkScore: string;
+  strengths: string;
+  improvements: string;
+  status: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface SupplierOrder {
+  id: string;
+  companyId: string;
+  orderNumber: string;
+  supplierName: string;
+  orderDate: string;
+  expectedDelivery: string;
+  actualDelivery: string;
+  itemDescription: string;
+  quantity: string;
+  unit: string;
+  unitPrice: string;
+  currency: string;
+  totalAmount: string;
+  responsiblePerson: string;
+  status: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface InspectionRecord {
+  id: string;
+  companyId: string;
+  inspectionTitle: string;
+  inspectionType: string;
+  location: string;
+  inspectionDate: string;
+  inspector: string;
+  scope: string;
+  findings: string;
+  riskLevel: string;
+  correctiveActions: string;
+  deadline: string;
+  responsiblePerson: string;
+  status: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface LeaseRecord {
+  id: string;
+  companyId: string;
+  propertyName: string;
+  propertyType: string;
+  landlord: string;
+  landlordContact: string;
+  address: string;
+  leaseStartDate: string;
+  leaseEndDate: string;
+  monthlyRent: string;
+  currency: string;
+  depositAmount: string;
+  paymentDueDay: string;
+  status: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface SkillMatrixRecord {
+  id: string;
+  companyId: string;
+  employeeName: string;
+  department: string;
+  position: string;
+  skillName: string;
+  skillCategory: string;
+  proficiencyLevel: string;
+  targetLevel: string;
+  lastAssessmentDate: string;
+  assessor: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface MTBFRecord {
+  id: string;
+  companyId: string;
+  equipmentName: string;
+  equipmentCode: string;
+  department: string;
+  failureDate: string;
+  failureTime: string;
+  restoredDate: string;
+  restoredTime: string;
+  failureDescription: string;
+  rootCause: string;
+  repairDuration: string;
+  responsiblePerson: string;
+  downtimeCost: string;
+  status: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface ShiftReportRecord {
+  id: string;
+  companyId: string;
+  reportDate: string;
+  shiftType: string;
+  department: string;
+  supervisor: string;
+  plannedProduction: string;
+  actualProduction: string;
+  unit: string;
+  scrapQuantity: string;
+  workerCount: string;
+  machineUtilization: string;
+  issues: string;
+  actions: string;
+  status: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface MaintenanceBudgetRecord {
+  id: string;
+  companyId: string;
+  budgetYear: string;
+  period: string;
+  department: string;
+  category: string;
+  description: string;
+  plannedAmount: string;
+  approvedAmount: string;
+  spentAmount: string;
+  currency: string;
+  status: string;
+  approvedBy: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface QCFormRecord {
+  id: string;
+  companyId: string;
+  formDate: string;
+  productName: string;
+  productionLine: string;
+  inspector: string;
+  inspectionType: string;
+  totalItems: string;
+  passedItems: string;
+  failedItems: string;
+  defectCount: string;
+  defectDescription: string;
+  status: string;
+  actionRequired: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface FieldAuditRecord {
+  id: string;
+  companyId: string;
+  auditDate: string;
+  location: string;
+  auditType: string;
+  auditor: string;
+  department: string;
+  checklistScore: string;
+  maxScore: string;
+  nonConformityCount: string;
+  riskLevel: string;
+  findings: string;
+  correctiveActionDeadline: string;
+  status: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface SatisfactionSurveyRecord {
+  id: string;
+  companyId: string;
+  surveyPeriod: string;
+  surveyDate: string;
+  department: string;
+  totalEmployees: string;
+  respondents: string;
+  managementScore: string;
+  workEnvironmentScore: string;
+  careerScore: string;
+  compensationScore: string;
+  overallScore: string;
+  topStrength: string;
+  topWeakness: string;
+  status: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface ElecMechProjectRecord {
+  id: string;
+  companyId: string;
+  projectCode: string;
+  projectName: string;
+  projectType: string;
+  area: string;
+  contractor: string;
+  startDate: string;
+  endDate: string;
+  budget: string;
+  currency: string;
+  progress: string;
+  responsible: string;
+  status: string;
+  description: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface GeneralExpenseRecord {
+  id: string;
+  companyId: string;
+  expenseDate: string;
+  category: string;
+  description: string;
+  amount: string;
+  currency: string;
+  paidBy: string;
+  approvedBy: string;
+  invoiceNumber: string;
+  department: string;
+  paymentMethod: string;
+  status: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface MaterialCertRecord {
+  id: string;
+  companyId: string;
+  materialName: string;
+  materialCode: string;
+  supplier: string;
+  certType: string;
+  certNumber: string;
+  issueDate: string;
+  expiryDate: string;
+  standard: string;
+  issuedBy: string;
+  status: string;
+  description: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface ProductionQualityRecord {
+  id: string;
+  companyId: string;
+  reportDate: string;
+  productionLine: string;
+  productName: string;
+  shift: string;
+  totalProduced: string;
+  accepted: string;
+  rejected: string;
+  reworked: string;
+  defectType: string;
+  defectCause: string;
+  responsible: string;
+  corrective: string;
+  status: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface WasteDisposalRecord {
+  id: string;
+  companyId: string;
+  disposalDate: string;
+  wasteType: string;
+  disposalMethod: string;
+  quantity: string;
+  unit: string;
+  vendor: string;
+  regulatoryCode: string;
+  cost: string;
+  currency: string;
+  responsible: string;
+  complianceStatus: string;
+  status: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface PersonnelAuthRecord {
+  id: string;
+  companyId: string;
+  employeeName: string;
+  department: string;
+  authType: string;
+  scope: string;
+  grantedBy: string;
+  grantDate: string;
+  expiryDate: string;
+  status: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface FacilityDamageRecord {
+  id: string;
+  companyId: string;
+  damageDate: string;
+  location: string;
+  damageType: string;
+  severity: string;
+  description: string;
+  reportedBy: string;
+  estimatedCost: string;
+  currency: string;
+  repairStatus: string;
+  completionDate: string;
+  responsible: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface ProjectChangeRecord {
+  id: string;
+  companyId: string;
+  projectName: string;
+  changeRequestNo: string;
+  changeType: string;
+  description: string;
+  requester: string;
+  requestDate: string;
+  impactScope: string;
+  impactCost: string;
+  impactTime: string;
+  priority: string;
+  approvalStatus: string;
+  approvedBy: string;
+  implementationDate: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface DocRevisionRecord {
+  id: string;
+  companyId: string;
+  docTitle: string;
+  docCode: string;
+  revisionNo: string;
+  revisionDate: string;
+  preparedBy: string;
+  reviewedBy: string;
+  approvedBy: string;
+  changesSummary: string;
+  department: string;
+  category: string;
+  status: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface EquipmentLifecycleRecord {
+  id: string;
+  companyId: string;
+  equipmentName: string;
+  equipmentCode: string;
+  brand: string;
+  model: string;
+  location: string;
+  installationDate: string;
+  expectedLifeYears: string;
+  endOfLifeDate: string;
+  lastMaintenanceDate: string;
+  purchaseCost: string;
+  currency: string;
+  replacementCost: string;
+  responsible: string;
+  status: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface PersonnelHandoverRecord {
+  id: string;
+  companyId: string;
+  handoverDate: string;
+  leavingEmployee: string;
+  leavingPosition: string;
+  receivingEmployee: string;
+  receivingPosition: string;
+  department: string;
+  handoverType: string;
+  tasksSummary: string;
+  pendingTasks: string;
+  keyContacts: string;
+  handoverDocs: string;
+  completionDate: string;
+  status: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface FacilityMaintenancePlanRecord {
+  id: string;
+  companyId: string;
+  facilityArea: string;
+  maintenanceType: string;
+  description: string;
+  frequency: string;
+  lastMaintenanceDate: string;
+  nextMaintenanceDate: string;
+  estimatedDuration: string;
+  contractor: string;
+  estimatedCost: string;
+  currency: string;
+  responsible: string;
+  priority: string;
+  status: string;
+  notes: string;
+  createdAt: number;
+}
