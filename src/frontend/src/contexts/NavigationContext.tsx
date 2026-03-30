@@ -55,6 +55,10 @@ export type Page =
   | "milestones"
   | "contact-directory"
   | "sop-library"
+  | "staffing-plan"
+  | "subcontractor"
+  | "insurance"
+  | "energy-targets"
   | "settings";
 
 interface NavContextValue {

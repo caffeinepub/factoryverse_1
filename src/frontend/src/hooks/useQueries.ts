@@ -10,6 +10,8 @@ import type {
   ChemicalRecord,
   ComplaintRecord,
   ContactEntry,
+  EnergyEfficiencyTarget,
+  InsurancePolicy,
   MaintenanceCostRecord,
   MaintenanceRecord,
   Milestone,
@@ -20,7 +22,9 @@ import type {
   SafetyIncident,
   SafetyIncidentRecord,
   SopEntry,
+  StaffingPlan,
   StockCountRecord,
+  SubcontractorJob,
   Supplier,
   TrainingProgramRecord,
   VehicleRecord,
@@ -4198,5 +4202,247 @@ export function useDeleteSopEntry() {
     },
     onSuccess: (_d, v) =>
       qc.invalidateQueries({ queryKey: ["sopEntries", v.companyId] }),
+  });
+}
+
+// ===== STAFFING PLAN =====
+export function useGetStaffingPlans(companyId: string | null) {
+  return useQuery<StaffingPlan[]>({
+    queryKey: ["staffingPlans", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<StaffingPlan>(lsKey("staffingPlans", companyId));
+    },
+  });
+}
+export function useAddStaffingPlan() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: Omit<StaffingPlan, "id" | "createdAt">) => {
+      const all = lsGet<StaffingPlan>(lsKey("staffingPlans", p.companyId));
+      const rec: StaffingPlan = {
+        ...p,
+        id: crypto.randomUUID(),
+        createdAt: Date.now(),
+      };
+      lsSet(lsKey("staffingPlans", p.companyId), [...all, rec]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["staffingPlans", v.companyId] }),
+  });
+}
+export function useUpdateStaffingPlan() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: StaffingPlan) => {
+      const all = lsGet<StaffingPlan>(lsKey("staffingPlans", p.companyId));
+      lsSet(
+        lsKey("staffingPlans", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["staffingPlans", v.companyId] }),
+  });
+}
+export function useDeleteStaffingPlan() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<StaffingPlan>(lsKey("staffingPlans", p.companyId));
+      lsSet(
+        lsKey("staffingPlans", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["staffingPlans", v.companyId] }),
+  });
+}
+
+// ===== SUBCONTRACTOR JOBS =====
+export function useGetSubcontractorJobs(companyId: string | null) {
+  return useQuery<SubcontractorJob[]>({
+    queryKey: ["subcontractorJobs", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<SubcontractorJob>(lsKey("subcontractorJobs", companyId));
+    },
+  });
+}
+export function useAddSubcontractorJob() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: Omit<SubcontractorJob, "id" | "createdAt">) => {
+      const all = lsGet<SubcontractorJob>(
+        lsKey("subcontractorJobs", p.companyId),
+      );
+      const rec: SubcontractorJob = {
+        ...p,
+        id: crypto.randomUUID(),
+        createdAt: Date.now(),
+      };
+      lsSet(lsKey("subcontractorJobs", p.companyId), [...all, rec]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["subcontractorJobs", v.companyId] }),
+  });
+}
+export function useUpdateSubcontractorJob() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: SubcontractorJob) => {
+      const all = lsGet<SubcontractorJob>(
+        lsKey("subcontractorJobs", p.companyId),
+      );
+      lsSet(
+        lsKey("subcontractorJobs", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["subcontractorJobs", v.companyId] }),
+  });
+}
+export function useDeleteSubcontractorJob() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<SubcontractorJob>(
+        lsKey("subcontractorJobs", p.companyId),
+      );
+      lsSet(
+        lsKey("subcontractorJobs", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["subcontractorJobs", v.companyId] }),
+  });
+}
+
+// ===== INSURANCE POLICIES =====
+export function useGetInsurancePolicies(companyId: string | null) {
+  return useQuery<InsurancePolicy[]>({
+    queryKey: ["insurancePolicies", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<InsurancePolicy>(lsKey("insurancePolicies", companyId));
+    },
+  });
+}
+export function useAddInsurancePolicy() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: Omit<InsurancePolicy, "id" | "createdAt">) => {
+      const all = lsGet<InsurancePolicy>(
+        lsKey("insurancePolicies", p.companyId),
+      );
+      const rec: InsurancePolicy = {
+        ...p,
+        id: crypto.randomUUID(),
+        createdAt: Date.now(),
+      };
+      lsSet(lsKey("insurancePolicies", p.companyId), [...all, rec]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["insurancePolicies", v.companyId] }),
+  });
+}
+export function useUpdateInsurancePolicy() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: InsurancePolicy) => {
+      const all = lsGet<InsurancePolicy>(
+        lsKey("insurancePolicies", p.companyId),
+      );
+      lsSet(
+        lsKey("insurancePolicies", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["insurancePolicies", v.companyId] }),
+  });
+}
+export function useDeleteInsurancePolicy() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<InsurancePolicy>(
+        lsKey("insurancePolicies", p.companyId),
+      );
+      lsSet(
+        lsKey("insurancePolicies", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["insurancePolicies", v.companyId] }),
+  });
+}
+
+// ===== ENERGY EFFICIENCY TARGETS =====
+export function useGetEnergyTargets(companyId: string | null) {
+  return useQuery<EnergyEfficiencyTarget[]>({
+    queryKey: ["energyTargets", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<EnergyEfficiencyTarget>(lsKey("energyTargets", companyId));
+    },
+  });
+}
+export function useAddEnergyTarget() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: Omit<EnergyEfficiencyTarget, "id" | "createdAt">) => {
+      const all = lsGet<EnergyEfficiencyTarget>(
+        lsKey("energyTargets", p.companyId),
+      );
+      const rec: EnergyEfficiencyTarget = {
+        ...p,
+        id: crypto.randomUUID(),
+        createdAt: Date.now(),
+      };
+      lsSet(lsKey("energyTargets", p.companyId), [...all, rec]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["energyTargets", v.companyId] }),
+  });
+}
+export function useUpdateEnergyTarget() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: EnergyEfficiencyTarget) => {
+      const all = lsGet<EnergyEfficiencyTarget>(
+        lsKey("energyTargets", p.companyId),
+      );
+      lsSet(
+        lsKey("energyTargets", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["energyTargets", v.companyId] }),
+  });
+}
+export function useDeleteEnergyTarget() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<EnergyEfficiencyTarget>(
+        lsKey("energyTargets", p.companyId),
+      );
+      lsSet(
+        lsKey("energyTargets", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["energyTargets", v.companyId] }),
   });
 }

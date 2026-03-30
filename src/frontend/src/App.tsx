@@ -22,9 +22,11 @@ import { CostAnalysisPage } from "./pages/CostAnalysisPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { DocumentsPage } from "./pages/DocumentsPage";
 import { EnergyPage } from "./pages/EnergyPage";
+import { EnergyTargetsPage } from "./pages/EnergyTargetsPage";
 import { EnvironmentPage } from "./pages/EnvironmentPage";
 import { FaultsPage } from "./pages/FaultsPage";
 import { HRPage } from "./pages/HRPage";
+import { InsurancePage } from "./pages/InsurancePage";
 import { InventoryPage } from "./pages/InventoryPage";
 import { LandingPage } from "./pages/LandingPage";
 import { LeavePage } from "./pages/LeavePage";
@@ -49,7 +51,9 @@ import { SafetyPage } from "./pages/SafetyPage";
 import { SettingsPage } from "./pages/SettingsPage";
 import { ShiftsPage } from "./pages/ShiftsPage";
 import { SopLibraryPage } from "./pages/SopLibraryPage";
+import { StaffingPlanPage } from "./pages/StaffingPlanPage";
 import { StockCountPage } from "./pages/StockCountPage";
+import { SubcontractorPage } from "./pages/SubcontractorPage";
 import { SupplierEvalPage } from "./pages/SupplierEvalPage";
 import { SuppliersPage } from "./pages/SuppliersPage";
 import { SupplyChainPage } from "./pages/SupplyChainPage";
@@ -112,6 +116,10 @@ const protectedPages = [
   "milestones",
   "contact-directory",
   "sop-library",
+  "staffing-plan",
+  "subcontractor",
+  "insurance",
+  "energy-targets",
 ] as const;
 
 function AppRouter() {
@@ -246,6 +254,14 @@ function AppRouter() {
       return <ContactDirectoryPage />;
     case "sop-library":
       return <SopLibraryPage />;
+    case "staffing-plan":
+      return <StaffingPlanPage />;
+    case "subcontractor":
+      return <SubcontractorPage />;
+    case "insurance":
+      return <InsurancePage />;
+    case "energy-targets":
+      return <EnergyTargetsPage />;
     case "settings":
       return <SettingsPage />;
     default:

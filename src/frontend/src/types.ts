@@ -735,3 +735,76 @@ export interface SopEntry {
   notes: string;
   createdAt: number;
 }
+
+export interface StaffingPlan {
+  id: string;
+  companyId: string;
+  department: string;
+  position: string;
+  requiredCount: string;
+  currentCount: string;
+  openPositions: string;
+  employmentType: string;
+  priority: string;
+  plannedDate: string;
+  recruiter: string;
+  status: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface SubcontractorJob {
+  id: string;
+  companyId: string;
+  jobTitle: string;
+  subcontractorName: string;
+  contactPerson: string;
+  startDate: string;
+  endDate: string;
+  contractValue: string;
+  currency: string;
+  scope: string;
+  location: string;
+  supervisor: string;
+  completionPercent: string;
+  status: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface InsurancePolicy {
+  id: string;
+  companyId: string;
+  policyName: string;
+  policyNumber: string;
+  insuranceCompany: string;
+  insuranceType: string;
+  coverageAmount: string;
+  currency: string;
+  premium: string;
+  startDate: string;
+  endDate: string;
+  contactPerson: string;
+  description: string;
+  status: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface EnergyEfficiencyTarget {
+  id: string;
+  companyId: string;
+  targetName: string;
+  energyType: string;
+  baselineValue: string;
+  targetValue: string;
+  currentValue: string;
+  unit: string;
+  year: string;
+  period: string;
+  responsible: string;
+  measures: string;
+  status: string;
+  notes: string;
+  createdAt: number;
+}
