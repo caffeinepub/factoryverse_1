@@ -563,7 +563,32 @@ export const idlService = IDL.Service({
 
 export const idlInitArgs = [];
 
+
 export const idlFactory = ({ IDL }) => {
+  const MaintenanceCostRecord = IDL.Record({
+    'id': IDL.Text, 'companyId': IDL.Text, 'workOrderId': IDL.Text, 'workOrderTitle': IDL.Text,
+    'costType': IDL.Text, 'description': IDL.Text, 'amount': IDL.Text, 'currency': IDL.Text,
+    'vendor': IDL.Text, 'invoiceNumber': IDL.Text, 'costDate': IDL.Text, 'approvedBy': IDL.Text,
+    'status': IDL.Text, 'notes': IDL.Text, 'createdAt': IDL.Int,
+  });
+  const TrainingProgramRecord = IDL.Record({
+    'id': IDL.Text, 'companyId': IDL.Text, 'title': IDL.Text, 'programType': IDL.Text,
+    'trainer': IDL.Text, 'department': IDL.Text, 'plannedDate': IDL.Text, 'plannedEndDate': IDL.Text,
+    'location': IDL.Text, 'maxParticipants': IDL.Text, 'participants': IDL.Text,
+    'status': IDL.Text, 'cost': IDL.Text, 'objectives': IDL.Text, 'notes': IDL.Text, 'createdAt': IDL.Int,
+  });
+  const SafetyIncidentRecord = IDL.Record({
+    'id': IDL.Text, 'companyId': IDL.Text, 'title': IDL.Text, 'incidentType': IDL.Text,
+    'severity': IDL.Text, 'location': IDL.Text, 'incidentDate': IDL.Text, 'reportedBy': IDL.Text,
+    'injured': IDL.Text, 'description': IDL.Text, 'immediateAction': IDL.Text,
+    'rootCause': IDL.Text, 'correctiveAction': IDL.Text, 'status': IDL.Text, 'notes': IDL.Text, 'createdAt': IDL.Int,
+  });
+  const BudgetRevisionRecord = IDL.Record({
+    'id': IDL.Text, 'companyId': IDL.Text, 'budgetTitle': IDL.Text, 'revisionNumber': IDL.Text,
+    'originalAmount': IDL.Text, 'revisedAmount': IDL.Text, 'changeReason': IDL.Text,
+    'requestedBy': IDL.Text, 'approvedBy': IDL.Text, 'revisionDate': IDL.Text,
+    'approvalDate': IDL.Text, 'status': IDL.Text, 'notes': IDL.Text, 'createdAt': IDL.Int,
+  });
   const Time = IDL.Int;
   const Machine = IDL.Record({
     'status' : IDL.Text,
@@ -961,8 +986,46 @@ export const idlFactory = ({ IDL }) => {
         [ComplaintRecord],
         [],
       ),
-    'deleteComplaintRecord' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], []),
+'addMaintenanceCostRecord' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+        [MaintenanceCostRecord], [],
+      ),
+    'getMaintenanceCostRecords' : IDL.Func([IDL.Text], [IDL.Vec(MaintenanceCostRecord)], ['query']),
+    'updateMaintenanceCostRecord' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+        [MaintenanceCostRecord], [],
+      ),
+    'deleteMaintenanceCostRecord' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], []),
+    'addTrainingProgramRecord' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+        [TrainingProgramRecord], [],
+      ),
+    'getTrainingProgramRecords' : IDL.Func([IDL.Text], [IDL.Vec(TrainingProgramRecord)], ['query']),
+    'updateTrainingProgramRecord' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+        [TrainingProgramRecord], [],
+      ),
+    'deleteTrainingProgramRecord' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], []),
+    'addSafetyIncidentRecord' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+        [SafetyIncidentRecord], [],
+      ),
+    'getSafetyIncidentRecords' : IDL.Func([IDL.Text], [IDL.Vec(SafetyIncidentRecord)], ['query']),
+    'updateSafetyIncidentRecord' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+        [SafetyIncidentRecord], [],
+      ),
+    'deleteSafetyIncidentRecord' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], []),
+    'addBudgetRevisionRecord' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+        [BudgetRevisionRecord], [],
+      ),
+    'getBudgetRevisionRecords' : IDL.Func([IDL.Text], [IDL.Vec(BudgetRevisionRecord)], ['query']),
+    'updateBudgetRevisionRecord' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+        [BudgetRevisionRecord], [],
+      ),
+    'deleteBudgetRevisionRecord' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], []),
   });
 };
-
 export const init = ({ IDL }) => { return []; };

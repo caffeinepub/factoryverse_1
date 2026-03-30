@@ -3007,4 +3007,322 @@ actor {
     };
   };
 
+
+  // ===================== BAKIM MALİYETİ TAKİBİ =====================
+  type MaintenanceCostRecord = {
+    id : Text;
+    companyId : Text;
+    workOrderId : Text;
+    workOrderTitle : Text;
+    costType : Text;
+    description : Text;
+    amount : Text;
+    currency : Text;
+    vendor : Text;
+    invoiceNumber : Text;
+    costDate : Text;
+    approvedBy : Text;
+    status : Text;
+    notes : Text;
+    createdAt : Time.Time;
+  };
+
+  stable var maintenanceCostRecords = Map.empty<Text, MaintenanceCostRecord>();
+
+  public shared func addMaintenanceCostRecord(adminCode : Text, workOrderId : Text, workOrderTitle : Text, costType : Text, description : Text, amount : Text, currency : Text, vendor : Text, invoiceNumber : Text, costDate : Text, approvedBy : Text, status : Text, notes : Text) : async MaintenanceCostRecord {
+    let companyId = switch (verifyAdminCode(adminCode)) {
+      case null { Runtime.trap("Invalid admin code") };
+      case (?c) { c };
+    };
+    let id = newCode();
+    let record : MaintenanceCostRecord = {
+      id; companyId; workOrderId; workOrderTitle; costType; description; amount; currency; vendor; invoiceNumber; costDate; approvedBy; status; notes;
+      createdAt = Time.now();
+    };
+    maintenanceCostRecords.add(id, record);
+    record;
+  };
+
+  public query func getMaintenanceCostRecords(userCode : Text) : async [MaintenanceCostRecord] {
+    let companyId = switch (getCompanyIdForUserCode(userCode)) {
+      case null { return [] };
+      case (?id) { id };
+    };
+    var result : [MaintenanceCostRecord] = [];
+    for ((_id, r) in maintenanceCostRecords.entries()) {
+      if (r.companyId == companyId) {
+        result := arrayAppend(result, r);
+      };
+    };
+    result;
+  };
+
+  public shared func updateMaintenanceCostRecord(adminCode : Text, recordId : Text, workOrderId : Text, workOrderTitle : Text, costType : Text, description : Text, amount : Text, currency : Text, vendor : Text, invoiceNumber : Text, costDate : Text, approvedBy : Text, status : Text, notes : Text) : async MaintenanceCostRecord {
+    switch (verifyAdminCode(adminCode)) {
+      case null { Runtime.trap("Invalid admin code") };
+      case (?_) {};
+    };
+    switch (maintenanceCostRecords.get(recordId)) {
+      case null { Runtime.trap("Record not found") };
+      case (?r) {
+        let updated : MaintenanceCostRecord = {
+          id = r.id; companyId = r.companyId;
+          workOrderId; workOrderTitle; costType; description; amount; currency; vendor; invoiceNumber; costDate; approvedBy; status; notes;
+          createdAt = r.createdAt;
+        };
+        maintenanceCostRecords.add(recordId, updated);
+        updated;
+      };
+    };
+  };
+
+  public shared func deleteMaintenanceCostRecord(adminCode : Text, recordId : Text) : async Bool {
+    switch (verifyAdminCode(adminCode)) {
+      case null { Runtime.trap("Invalid admin code") };
+      case (?_) {};
+    };
+    switch (maintenanceCostRecords.get(recordId)) {
+      case null { false };
+      case (?_) { maintenanceCostRecords.remove(recordId); true };
+    };
+  };
+
+  // ===================== EĞİTİM PROGRAMI PLANLAMA =====================
+  type TrainingProgramRecord = {
+    id : Text;
+    companyId : Text;
+    title : Text;
+    programType : Text;
+    trainer : Text;
+    department : Text;
+    plannedDate : Text;
+    plannedEndDate : Text;
+    location : Text;
+    maxParticipants : Text;
+    participants : Text;
+    status : Text;
+    cost : Text;
+    objectives : Text;
+    notes : Text;
+    createdAt : Time.Time;
+  };
+
+  stable var trainingProgramRecords = Map.empty<Text, TrainingProgramRecord>();
+
+  public shared func addTrainingProgramRecord(adminCode : Text, title : Text, programType : Text, trainer : Text, department : Text, plannedDate : Text, plannedEndDate : Text, location : Text, maxParticipants : Text, participants : Text, status : Text, cost : Text, objectives : Text, notes : Text) : async TrainingProgramRecord {
+    let companyId = switch (verifyAdminCode(adminCode)) {
+      case null { Runtime.trap("Invalid admin code") };
+      case (?c) { c };
+    };
+    let id = newCode();
+    let record : TrainingProgramRecord = {
+      id; companyId; title; programType; trainer; department; plannedDate; plannedEndDate; location; maxParticipants; participants; status; cost; objectives; notes;
+      createdAt = Time.now();
+    };
+    trainingProgramRecords.add(id, record);
+    record;
+  };
+
+  public query func getTrainingProgramRecords(userCode : Text) : async [TrainingProgramRecord] {
+    let companyId = switch (getCompanyIdForUserCode(userCode)) {
+      case null { return [] };
+      case (?id) { id };
+    };
+    var result : [TrainingProgramRecord] = [];
+    for ((_id, r) in trainingProgramRecords.entries()) {
+      if (r.companyId == companyId) {
+        result := arrayAppend(result, r);
+      };
+    };
+    result;
+  };
+
+  public shared func updateTrainingProgramRecord(adminCode : Text, recordId : Text, title : Text, programType : Text, trainer : Text, department : Text, plannedDate : Text, plannedEndDate : Text, location : Text, maxParticipants : Text, participants : Text, status : Text, cost : Text, objectives : Text, notes : Text) : async TrainingProgramRecord {
+    switch (verifyAdminCode(adminCode)) {
+      case null { Runtime.trap("Invalid admin code") };
+      case (?_) {};
+    };
+    switch (trainingProgramRecords.get(recordId)) {
+      case null { Runtime.trap("Record not found") };
+      case (?r) {
+        let updated : TrainingProgramRecord = {
+          id = r.id; companyId = r.companyId;
+          title; programType; trainer; department; plannedDate; plannedEndDate; location; maxParticipants; participants; status; cost; objectives; notes;
+          createdAt = r.createdAt;
+        };
+        trainingProgramRecords.add(recordId, updated);
+        updated;
+      };
+    };
+  };
+
+  public shared func deleteTrainingProgramRecord(adminCode : Text, recordId : Text) : async Bool {
+    switch (verifyAdminCode(adminCode)) {
+      case null { Runtime.trap("Invalid admin code") };
+      case (?_) {};
+    };
+    switch (trainingProgramRecords.get(recordId)) {
+      case null { false };
+      case (?_) { trainingProgramRecords.remove(recordId); true };
+    };
+  };
+
+  // ===================== GÜVENLİK OLAYI TAKİBİ =====================
+  type SafetyIncidentRecord = {
+    id : Text;
+    companyId : Text;
+    title : Text;
+    incidentType : Text;
+    severity : Text;
+    location : Text;
+    incidentDate : Text;
+    reportedBy : Text;
+    injured : Text;
+    description : Text;
+    immediateAction : Text;
+    rootCause : Text;
+    correctiveAction : Text;
+    status : Text;
+    notes : Text;
+    createdAt : Time.Time;
+  };
+
+  stable var safetyIncidentRecords = Map.empty<Text, SafetyIncidentRecord>();
+
+  public shared func addSafetyIncidentRecord(adminCode : Text, title : Text, incidentType : Text, severity : Text, location : Text, incidentDate : Text, reportedBy : Text, injured : Text, description : Text, immediateAction : Text, rootCause : Text, correctiveAction : Text, status : Text, notes : Text) : async SafetyIncidentRecord {
+    let companyId = switch (verifyAdminCode(adminCode)) {
+      case null { Runtime.trap("Invalid admin code") };
+      case (?c) { c };
+    };
+    let id = newCode();
+    let record : SafetyIncidentRecord = {
+      id; companyId; title; incidentType; severity; location; incidentDate; reportedBy; injured; description; immediateAction; rootCause; correctiveAction; status; notes;
+      createdAt = Time.now();
+    };
+    safetyIncidentRecords.add(id, record);
+    record;
+  };
+
+  public query func getSafetyIncidentRecords(userCode : Text) : async [SafetyIncidentRecord] {
+    let companyId = switch (getCompanyIdForUserCode(userCode)) {
+      case null { return [] };
+      case (?id) { id };
+    };
+    var result : [SafetyIncidentRecord] = [];
+    for ((_id, r) in safetyIncidentRecords.entries()) {
+      if (r.companyId == companyId) {
+        result := arrayAppend(result, r);
+      };
+    };
+    result;
+  };
+
+  public shared func updateSafetyIncidentRecord(adminCode : Text, recordId : Text, title : Text, incidentType : Text, severity : Text, location : Text, incidentDate : Text, reportedBy : Text, injured : Text, description : Text, immediateAction : Text, rootCause : Text, correctiveAction : Text, status : Text, notes : Text) : async SafetyIncidentRecord {
+    switch (verifyAdminCode(adminCode)) {
+      case null { Runtime.trap("Invalid admin code") };
+      case (?_) {};
+    };
+    switch (safetyIncidentRecords.get(recordId)) {
+      case null { Runtime.trap("Record not found") };
+      case (?r) {
+        let updated : SafetyIncidentRecord = {
+          id = r.id; companyId = r.companyId;
+          title; incidentType; severity; location; incidentDate; reportedBy; injured; description; immediateAction; rootCause; correctiveAction; status; notes;
+          createdAt = r.createdAt;
+        };
+        safetyIncidentRecords.add(recordId, updated);
+        updated;
+      };
+    };
+  };
+
+  public shared func deleteSafetyIncidentRecord(adminCode : Text, recordId : Text) : async Bool {
+    switch (verifyAdminCode(adminCode)) {
+      case null { Runtime.trap("Invalid admin code") };
+      case (?_) {};
+    };
+    switch (safetyIncidentRecords.get(recordId)) {
+      case null { false };
+      case (?_) { safetyIncidentRecords.remove(recordId); true };
+    };
+  };
+
+  // ===================== BÜTÇE REVİZYON TAKİBİ =====================
+  type BudgetRevisionRecord = {
+    id : Text;
+    companyId : Text;
+    budgetTitle : Text;
+    revisionNumber : Text;
+    originalAmount : Text;
+    revisedAmount : Text;
+    changeReason : Text;
+    requestedBy : Text;
+    approvedBy : Text;
+    revisionDate : Text;
+    approvalDate : Text;
+    status : Text;
+    notes : Text;
+    createdAt : Time.Time;
+  };
+
+  stable var budgetRevisionRecords = Map.empty<Text, BudgetRevisionRecord>();
+
+  public shared func addBudgetRevisionRecord(adminCode : Text, budgetTitle : Text, revisionNumber : Text, originalAmount : Text, revisedAmount : Text, changeReason : Text, requestedBy : Text, approvedBy : Text, revisionDate : Text, approvalDate : Text, status : Text, notes : Text) : async BudgetRevisionRecord {
+    let companyId = switch (verifyAdminCode(adminCode)) {
+      case null { Runtime.trap("Invalid admin code") };
+      case (?c) { c };
+    };
+    let id = newCode();
+    let record : BudgetRevisionRecord = {
+      id; companyId; budgetTitle; revisionNumber; originalAmount; revisedAmount; changeReason; requestedBy; approvedBy; revisionDate; approvalDate; status; notes;
+      createdAt = Time.now();
+    };
+    budgetRevisionRecords.add(id, record);
+    record;
+  };
+
+  public query func getBudgetRevisionRecords(userCode : Text) : async [BudgetRevisionRecord] {
+    let companyId = switch (getCompanyIdForUserCode(userCode)) {
+      case null { return [] };
+      case (?id) { id };
+    };
+    var result : [BudgetRevisionRecord] = [];
+    for ((_id, r) in budgetRevisionRecords.entries()) {
+      if (r.companyId == companyId) {
+        result := arrayAppend(result, r);
+      };
+    };
+    result;
+  };
+
+  public shared func updateBudgetRevisionRecord(adminCode : Text, recordId : Text, budgetTitle : Text, revisionNumber : Text, originalAmount : Text, revisedAmount : Text, changeReason : Text, requestedBy : Text, approvedBy : Text, revisionDate : Text, approvalDate : Text, status : Text, notes : Text) : async BudgetRevisionRecord {
+    switch (verifyAdminCode(adminCode)) {
+      case null { Runtime.trap("Invalid admin code") };
+      case (?_) {};
+    };
+    switch (budgetRevisionRecords.get(recordId)) {
+      case null { Runtime.trap("Record not found") };
+      case (?r) {
+        let updated : BudgetRevisionRecord = {
+          id = r.id; companyId = r.companyId;
+          budgetTitle; revisionNumber; originalAmount; revisedAmount; changeReason; requestedBy; approvedBy; revisionDate; approvalDate; status; notes;
+          createdAt = r.createdAt;
+        };
+        budgetRevisionRecords.add(recordId, updated);
+        updated;
+      };
+    };
+  };
+
+  public shared func deleteBudgetRevisionRecord(adminCode : Text, recordId : Text) : async Bool {
+    switch (verifyAdminCode(adminCode)) {
+      case null { Runtime.trap("Invalid admin code") };
+      case (?_) {};
+    };
+    switch (budgetRevisionRecords.get(recordId)) {
+      case null { false };
+      case (?_) { budgetRevisionRecords.remove(recordId); true };
+    };
+  };
+
 };

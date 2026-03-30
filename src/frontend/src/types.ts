@@ -558,3 +558,76 @@ export interface ComplaintRecord {
   notes: string;
   createdAt: bigint;
 }
+
+export interface MaintenanceCostRecord {
+  id: string;
+  companyId: string;
+  workOrderId: string;
+  workOrderTitle: string;
+  costType: string;
+  description: string;
+  amount: string;
+  currency: string;
+  vendor: string;
+  invoiceNumber: string;
+  costDate: string;
+  approvedBy: string;
+  status: string;
+  notes: string;
+  createdAt: bigint;
+}
+
+export interface TrainingProgramRecord {
+  id: string;
+  companyId: string;
+  title: string;
+  programType: string;
+  trainer: string;
+  department: string;
+  plannedDate: string;
+  plannedEndDate: string;
+  location: string;
+  maxParticipants: string;
+  participants: string;
+  status: string;
+  cost: string;
+  objectives: string;
+  notes: string;
+  createdAt: bigint;
+}
+
+export interface SafetyIncidentRecord {
+  id: string;
+  companyId: string;
+  title: string;
+  incidentType: string;
+  severity: string;
+  location: string;
+  incidentDate: string;
+  reportedBy: string;
+  injured: string;
+  description: string;
+  immediateAction: string;
+  rootCause: string;
+  correctiveAction: string;
+  status: string;
+  notes: string;
+  createdAt: bigint;
+}
+
+export interface BudgetRevisionRecord {
+  id: string;
+  companyId: string;
+  budgetTitle: string;
+  revisionNumber: string;
+  originalAmount: string;
+  revisedAmount: string;
+  changeReason: string;
+  requestedBy: string;
+  approvedBy: string;
+  revisionDate: string;
+  approvalDate: string;
+  status: string;
+  notes: string;
+  createdAt: bigint;
+}

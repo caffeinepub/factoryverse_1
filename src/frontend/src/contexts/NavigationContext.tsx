@@ -45,6 +45,10 @@ export type Page =
   | "stockcount"
   | "vehicles"
   | "complaints"
+  | "maintenance-cost"
+  | "training-program"
+  | "safety-incident"
+  | "budget-revision"
   | "settings";
 
 interface NavContextValue {

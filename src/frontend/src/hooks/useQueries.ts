@@ -2,17 +2,21 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { Company, Machine, Personnel } from "../backend";
 import type {
   BudgetItem,
+  BudgetRevisionRecord,
   CalibrationRecord,
   CapacityRecord,
   ChemicalRecord,
   ComplaintRecord,
+  MaintenanceCostRecord,
   MaintenanceRecord,
   MoldRecord,
   ProductionRecord,
   Project,
   SafetyIncident,
+  SafetyIncidentRecord,
   StockCountRecord,
   Supplier,
+  TrainingProgramRecord,
   VehicleRecord,
 } from "../types";
 import { useActor } from "./useActor";
@@ -3392,5 +3396,443 @@ export function useDeleteComplaintRecord() {
       return (actor as any).deleteComplaintRecord(p.adminCode, p.recordId);
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["complaintRecords"] }),
+  });
+}
+
+// ===================== BAKIM MALİYETİ TAKİBİ =====================
+export function useGetMaintenanceCostRecords(userCode: string | null) {
+  const { actor } = useActor();
+  return useQuery<MaintenanceCostRecord[]>({
+    queryKey: ["maintenanceCostRecords", userCode],
+    queryFn: async () => {
+      if (!userCode || !actor) return [];
+      return (actor as any).getMaintenanceCostRecords(userCode);
+    },
+    enabled: !!userCode && !!actor,
+  });
+}
+
+export function useAddMaintenanceCostRecord() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: {
+      adminCode: string;
+      workOrderId: string;
+      workOrderTitle: string;
+      costType: string;
+      description: string;
+      amount: string;
+      currency: string;
+      vendor: string;
+      invoiceNumber: string;
+      costDate: string;
+      approvedBy: string;
+      status: string;
+      notes: string;
+    }) => {
+      return (actor as any).addMaintenanceCostRecord(
+        p.adminCode,
+        p.workOrderId,
+        p.workOrderTitle,
+        p.costType,
+        p.description,
+        p.amount,
+        p.currency,
+        p.vendor,
+        p.invoiceNumber,
+        p.costDate,
+        p.approvedBy,
+        p.status,
+        p.notes,
+      );
+    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["maintenanceCostRecords"] }),
+  });
+}
+
+export function useUpdateMaintenanceCostRecord() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: {
+      adminCode: string;
+      recordId: string;
+      workOrderId: string;
+      workOrderTitle: string;
+      costType: string;
+      description: string;
+      amount: string;
+      currency: string;
+      vendor: string;
+      invoiceNumber: string;
+      costDate: string;
+      approvedBy: string;
+      status: string;
+      notes: string;
+    }) => {
+      return (actor as any).updateMaintenanceCostRecord(
+        p.adminCode,
+        p.recordId,
+        p.workOrderId,
+        p.workOrderTitle,
+        p.costType,
+        p.description,
+        p.amount,
+        p.currency,
+        p.vendor,
+        p.invoiceNumber,
+        p.costDate,
+        p.approvedBy,
+        p.status,
+        p.notes,
+      );
+    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["maintenanceCostRecords"] }),
+  });
+}
+
+export function useDeleteMaintenanceCostRecord() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { adminCode: string; recordId: string }) => {
+      return (actor as any).deleteMaintenanceCostRecord(
+        p.adminCode,
+        p.recordId,
+      );
+    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["maintenanceCostRecords"] }),
+  });
+}
+
+// ===================== EĞİTİM PROGRAMI PLANLAMA =====================
+export function useGetTrainingProgramRecords(userCode: string | null) {
+  const { actor } = useActor();
+  return useQuery<TrainingProgramRecord[]>({
+    queryKey: ["trainingProgramRecords", userCode],
+    queryFn: async () => {
+      if (!userCode || !actor) return [];
+      return (actor as any).getTrainingProgramRecords(userCode);
+    },
+    enabled: !!userCode && !!actor,
+  });
+}
+
+export function useAddTrainingProgramRecord() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: {
+      adminCode: string;
+      title: string;
+      programType: string;
+      trainer: string;
+      department: string;
+      plannedDate: string;
+      plannedEndDate: string;
+      location: string;
+      maxParticipants: string;
+      participants: string;
+      status: string;
+      cost: string;
+      objectives: string;
+      notes: string;
+    }) => {
+      return (actor as any).addTrainingProgramRecord(
+        p.adminCode,
+        p.title,
+        p.programType,
+        p.trainer,
+        p.department,
+        p.plannedDate,
+        p.plannedEndDate,
+        p.location,
+        p.maxParticipants,
+        p.participants,
+        p.status,
+        p.cost,
+        p.objectives,
+        p.notes,
+      );
+    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["trainingProgramRecords"] }),
+  });
+}
+
+export function useUpdateTrainingProgramRecord() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: {
+      adminCode: string;
+      recordId: string;
+      title: string;
+      programType: string;
+      trainer: string;
+      department: string;
+      plannedDate: string;
+      plannedEndDate: string;
+      location: string;
+      maxParticipants: string;
+      participants: string;
+      status: string;
+      cost: string;
+      objectives: string;
+      notes: string;
+    }) => {
+      return (actor as any).updateTrainingProgramRecord(
+        p.adminCode,
+        p.recordId,
+        p.title,
+        p.programType,
+        p.trainer,
+        p.department,
+        p.plannedDate,
+        p.plannedEndDate,
+        p.location,
+        p.maxParticipants,
+        p.participants,
+        p.status,
+        p.cost,
+        p.objectives,
+        p.notes,
+      );
+    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["trainingProgramRecords"] }),
+  });
+}
+
+export function useDeleteTrainingProgramRecord() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { adminCode: string; recordId: string }) => {
+      return (actor as any).deleteTrainingProgramRecord(
+        p.adminCode,
+        p.recordId,
+      );
+    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["trainingProgramRecords"] }),
+  });
+}
+
+// ===================== GÜVENLİK OLAYI TAKİBİ =====================
+export function useGetSafetyIncidentRecords(userCode: string | null) {
+  const { actor } = useActor();
+  return useQuery<SafetyIncidentRecord[]>({
+    queryKey: ["safetyIncidentRecords", userCode],
+    queryFn: async () => {
+      if (!userCode || !actor) return [];
+      return (actor as any).getSafetyIncidentRecords(userCode);
+    },
+    enabled: !!userCode && !!actor,
+  });
+}
+
+export function useAddSafetyIncidentRecord() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: {
+      adminCode: string;
+      title: string;
+      incidentType: string;
+      severity: string;
+      location: string;
+      incidentDate: string;
+      reportedBy: string;
+      injured: string;
+      description: string;
+      immediateAction: string;
+      rootCause: string;
+      correctiveAction: string;
+      status: string;
+      notes: string;
+    }) => {
+      return (actor as any).addSafetyIncidentRecord(
+        p.adminCode,
+        p.title,
+        p.incidentType,
+        p.severity,
+        p.location,
+        p.incidentDate,
+        p.reportedBy,
+        p.injured,
+        p.description,
+        p.immediateAction,
+        p.rootCause,
+        p.correctiveAction,
+        p.status,
+        p.notes,
+      );
+    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["safetyIncidentRecords"] }),
+  });
+}
+
+export function useUpdateSafetyIncidentRecord() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: {
+      adminCode: string;
+      recordId: string;
+      title: string;
+      incidentType: string;
+      severity: string;
+      location: string;
+      incidentDate: string;
+      reportedBy: string;
+      injured: string;
+      description: string;
+      immediateAction: string;
+      rootCause: string;
+      correctiveAction: string;
+      status: string;
+      notes: string;
+    }) => {
+      return (actor as any).updateSafetyIncidentRecord(
+        p.adminCode,
+        p.recordId,
+        p.title,
+        p.incidentType,
+        p.severity,
+        p.location,
+        p.incidentDate,
+        p.reportedBy,
+        p.injured,
+        p.description,
+        p.immediateAction,
+        p.rootCause,
+        p.correctiveAction,
+        p.status,
+        p.notes,
+      );
+    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["safetyIncidentRecords"] }),
+  });
+}
+
+export function useDeleteSafetyIncidentRecord() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { adminCode: string; recordId: string }) => {
+      return (actor as any).deleteSafetyIncidentRecord(p.adminCode, p.recordId);
+    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["safetyIncidentRecords"] }),
+  });
+}
+
+// ===================== BÜTÇE REVİZYON TAKİBİ =====================
+export function useGetBudgetRevisionRecords(userCode: string | null) {
+  const { actor } = useActor();
+  return useQuery<BudgetRevisionRecord[]>({
+    queryKey: ["budgetRevisionRecords", userCode],
+    queryFn: async () => {
+      if (!userCode || !actor) return [];
+      return (actor as any).getBudgetRevisionRecords(userCode);
+    },
+    enabled: !!userCode && !!actor,
+  });
+}
+
+export function useAddBudgetRevisionRecord() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: {
+      adminCode: string;
+      budgetTitle: string;
+      revisionNumber: string;
+      originalAmount: string;
+      revisedAmount: string;
+      changeReason: string;
+      requestedBy: string;
+      approvedBy: string;
+      revisionDate: string;
+      approvalDate: string;
+      status: string;
+      notes: string;
+    }) => {
+      return (actor as any).addBudgetRevisionRecord(
+        p.adminCode,
+        p.budgetTitle,
+        p.revisionNumber,
+        p.originalAmount,
+        p.revisedAmount,
+        p.changeReason,
+        p.requestedBy,
+        p.approvedBy,
+        p.revisionDate,
+        p.approvalDate,
+        p.status,
+        p.notes,
+      );
+    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["budgetRevisionRecords"] }),
+  });
+}
+
+export function useUpdateBudgetRevisionRecord() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: {
+      adminCode: string;
+      recordId: string;
+      budgetTitle: string;
+      revisionNumber: string;
+      originalAmount: string;
+      revisedAmount: string;
+      changeReason: string;
+      requestedBy: string;
+      approvedBy: string;
+      revisionDate: string;
+      approvalDate: string;
+      status: string;
+      notes: string;
+    }) => {
+      return (actor as any).updateBudgetRevisionRecord(
+        p.adminCode,
+        p.recordId,
+        p.budgetTitle,
+        p.revisionNumber,
+        p.originalAmount,
+        p.revisedAmount,
+        p.changeReason,
+        p.requestedBy,
+        p.approvedBy,
+        p.revisionDate,
+        p.approvalDate,
+        p.status,
+        p.notes,
+      );
+    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["budgetRevisionRecords"] }),
+  });
+}
+
+export function useDeleteBudgetRevisionRecord() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { adminCode: string; recordId: string }) => {
+      return (actor as any).deleteBudgetRevisionRecord(p.adminCode, p.recordId);
+    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["budgetRevisionRecords"] }),
   });
 }
