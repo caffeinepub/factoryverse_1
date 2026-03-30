@@ -117,7 +117,11 @@ export type Page =
   | "kpi-dashboard"
   | "settings"
   | "warehouse"
-  | "raw-materials";
+  | "raw-materials"
+  | "salary-tracking"
+  | "invoice-management"
+  | "customer-orders"
+  | "leave-requests";
 
 interface NavContextValue {
   page: Page;

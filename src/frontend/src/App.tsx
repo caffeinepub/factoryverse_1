@@ -20,6 +20,7 @@ import { ComplaintsPage } from "./pages/ComplaintsPage";
 import { ContactDirectoryPage } from "./pages/ContactDirectoryPage";
 import { ContractsPage } from "./pages/ContractsPage";
 import { CostAnalysisPage } from "./pages/CostAnalysisPage";
+import { CustomerOrdersPage } from "./pages/CustomerOrdersPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { DocRevisionPage } from "./pages/DocRevisionPage";
 import { DocumentsPage } from "./pages/DocumentsPage";
@@ -47,11 +48,13 @@ import { HRPage } from "./pages/HRPage";
 import { InspectionManagementPage } from "./pages/InspectionManagementPage";
 import { InsurancePage } from "./pages/InsurancePage";
 import { InventoryPage } from "./pages/InventoryPage";
+import { InvoiceManagementPage } from "./pages/InvoiceManagementPage";
 import { JobApplicationsPage } from "./pages/JobApplicationsPage";
 import { KPIDashboardPage } from "./pages/KPIDashboardPage";
 import { LandingPage } from "./pages/LandingPage";
 import { LeaseManagementPage } from "./pages/LeaseManagementPage";
 import { LeavePage } from "./pages/LeavePage";
+import { LeaveRequestsPage } from "./pages/LeaveRequestsPage";
 import { LegalCompliancePage } from "./pages/LegalCompliancePage";
 import { LoginPage } from "./pages/LoginPage";
 import { MTBFPage } from "./pages/MTBFPage";
@@ -89,6 +92,7 @@ import { RiskPage } from "./pages/RiskPage";
 import { RootCauseAnalysisPage } from "./pages/RootCauseAnalysisPage";
 import { SafetyIncidentPage } from "./pages/SafetyIncidentPage";
 import { SafetyPage } from "./pages/SafetyPage";
+import { SalaryTrackingPage } from "./pages/SalaryTrackingPage";
 import { SatisfactionSurveyPage } from "./pages/SatisfactionSurveyPage";
 import { SecurityToursPage } from "./pages/SecurityToursPage";
 import { SettingsPage } from "./pages/SettingsPage";
@@ -236,6 +240,10 @@ const protectedPages = [
   "kpi-dashboard",
   "warehouse",
   "raw-materials",
+  "salary-tracking",
+  "invoice-management",
+  "customer-orders",
+  "leave-requests",
 ] as const;
 
 function AppRouter() {
@@ -496,6 +504,14 @@ function AppRouter() {
       return <WarehousePage />;
     case "raw-materials":
       return <RawMaterialsPage />;
+    case "salary-tracking":
+      return <SalaryTrackingPage />;
+    case "invoice-management":
+      return <InvoiceManagementPage />;
+    case "customer-orders":
+      return <CustomerOrdersPage />;
+    case "leave-requests":
+      return <LeaveRequestsPage />;
     default:
       return <LandingPage />;
   }

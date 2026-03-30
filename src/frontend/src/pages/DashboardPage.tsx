@@ -127,6 +127,12 @@ export function DashboardPage() {
       icon: <TrendingUp size={20} className="text-emerald-600" />,
       bg: "bg-emerald-100",
     },
+    {
+      label: "Toplam Modül",
+      value: 134,
+      icon: <LayoutDashboard size={20} className="text-cyan-600" />,
+      bg: "bg-cyan-100",
+    },
   ];
 
   return (
@@ -299,6 +305,16 @@ export function DashboardPage() {
                 {
                   label: "Raporlama",
                   page: "reports" as const,
+                  icon: <TrendingUp size={16} />,
+                },
+                {
+                  label: "Tedarikçiler",
+                  page: "suppliers" as const,
+                  icon: <Truck size={16} />,
+                },
+                {
+                  label: "Bütçe",
+                  page: "budget" as const,
                   icon: <TrendingUp size={16} />,
                 },
               ].map((item) => (

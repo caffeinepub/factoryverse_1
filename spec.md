@@ -1,44 +1,51 @@
-# FactoryVerse — v39 Final Stabilization
+# FactoryVerse — v40 Final Build
 
 ## Current State
-- 100+ modül tamamlanmış durumda (v38 itibarıyla)
-- Sidebar: 100+ madde düz liste halinde, hiç kategori grubu yok — kullanılamaz UX
-- App.tsx'de iki route uyumsuzluğu: `equipment-maintenance-history` ve `employee-perf-review` protectedPages'de yanlış isimlendirme
-- Eksik modüller: Depo Yönetimi, Hammadde Takibi
-- Dashboard: temel KPI kartları var ama modül başarımı ve hızlı erişim zayıf
+
+The app is at v39 with 130+ pages covering HR, production, maintenance, procurement, safety, finance, projects, facility, compliance, and audit. Sidebar uses 11 collapsible category groups. Backend is Motoko-based with full persistence. All core modules are implemented.
+
+Pages already existing (partial list of notable ones):
+- HR: personnel, hr, staffing-plan, leave, absence-tracking, shifts, personnel-shift-schedule, shift-reports, personnel-rotation, personnel-handover, career-planning, perf-review, skills-matrix, satisfaction-surveys, job-applications, training, training-program, training-certs
+- Production: production, quality, qc-forms, production-quality, quality-targets, capacity, molds
+- Maintenance: machines, maintenance, faults, workorders, maintenance-calendar, maintenance-cost, maintenance-budget, calibration, equipment-maintenance, equipment-rental, equipment-lifecycle, equipment-fault-analysis, equipment-energy, equipment-utilization, mtbf, spare-parts, spare-parts-orders
+- Supply: suppliers, supplier-eval, supplier-orders, supplier-contracts, supplier-scorecard, supplier-complaints, purchase-requests, supplychain, stockcount, inventory, chemicals, warehouse, raw-materials
+- Safety: safety, safety-incident, occupational-health, security-tours, environment, env-measurements, waste-disposal, waste-recycling, root-cause-analysis
+- Finance: budget, budget-revision, costanalysis, general-expenses, facility-maint-cost
+- Projects: projects, tasks, milestones, project-risks, project-changes, project-resources, project-status-reports, project-closure, action-plans, workflows
+- Facility: assets, vehicles, vehicle-inspection, lease-management, facility-damage, facility-maint-plan, facility-cleaning, energy-map, energy, energy-targets, elec-mech-projects, subcontractor
+- Documents: documents, sop-library, doc-revision, material-certs, legal-compliance, insurance, contracts, warranty, personnel-auth
+- Audit: risk, audits, field-audits, inspection-management, complaints, performance, contact-directory, visitors
 
 ## Requested Changes (Diff)
 
 ### Add
-- `WarehousePage.tsx` — Depo Yönetimi: depo alanları, bölge/doluluk takibi, stok konumu, kapasite uyarısı
-- `RawMaterialsPage.tsx` — Hammadde Takibi: hammadde envanteri, tedarikçi kaynağı, min stok uyarısı, birim tüketim
-- Sidebar'a bu 2 yeni modül eklenir, "Tedarik & Depo" grubu altına
+- **Maaş & Ücret Takibi** (`salary-tracking`) — personnel salary records, pay periods, net/gross amounts, payment status (HR group)
+- **Fatura Yönetimi** (`invoice-management`) — inbound/outbound invoices, supplier/customer, due date alerts, payment status (Finance group)
+- **Müşteri Sipariş Takibi** (`customer-orders`) — customer order management, order status, delivery dates, priority (new Müşteri group OR Audit group)
+- **İzin Talep Yönetimi** (`leave-requests`) — employee leave request workflow, approval/rejection, leave type, dates, approver tracking (HR group)
 
 ### Modify
-- **Sidebar.tsx**: Düz 100+ madde yerine 11 collapsible kategori grubu. Her grup başlık + chevron ikonuyla açılır/kapanır. Aktif sayfanın bulunduğu grup otomatik açık. Gruplar:
-  1. Ana Ekran (Dashboard, KPI, Raporlama, Bildirimler, Ayarlar)
-  2. İnsan Kaynakları (Personel, HR, Norm Kadro, İzin, Devamsızlık, Vardiya Planlama, Vardiya Çizelgesi, Rotasyon, Görev Devri, Kariyer, Perf. Değerlendirme, Yetenek Matrisi, Memnuniyet Anketi, İş Başvuruları, Eğitim & Sertifika, Eğitim Programı, Eğitim Sertifikaları)
-  3. Üretim & Kalite (Üretim, Kalite, KK Formu, Üretim Kalite Raporu, Kalite Hedefleri, Kapasite, Vardiya Raporları, Kalıp & Aparat)
-  4. Bakım & Ekipman (Makineler, Bakım, Arıza, İş Emirleri, Bakım Takvimi, Bakım Maliyeti, Bakım Bütçe, Kalibrasyon, Ekipman Bakım Geçmişi, Ekipman Kiralama, Ekipman Ömür, Arıza Analizi, Ekipman Enerji, Teçhizat Kullanım, MGBF, Yedek Parça, Yedek Parça Siparişleri)
-  5. Tedarik & Depo (Tedarikçiler, Tedarikçi Değerlendirme, Tedarikçi Siparişleri, Tedarikçi Sözleşmeleri, Tedarikçi Skorkartı, Tedarikçi Şikayetleri, Satın Alma, Tedarik Zinciri, Stok Sayımı, Envanter, Kimyasal, Depo Yönetimi, Hammadde Takibi)
-  6. Güvenlik & Çevre (İSG, Güvenlik Olayı, İş Sağlığı, Güvenlik Turu, Çevre & Atık, Çevre Ölçüm, Atık Bertaraf, Geri Dönüşüm, Kök Neden Analizi)
-  7. Finans & Bütçe (Bütçe, Bütçe Revizyon, Maliyet Analizi, Genel Gider, Bakım Maliyeti, Tesis Bakım Maliyeti)
-  8. Proje Yönetimi (Projeler, Görevler, Kilometre Taşları, Proje Risk, Proje Değişiklik, Proje Kaynakları, Proje Durum Raporları, Proje Kapanış Raporu, Aksiyon Planları, İş Akışı)
-  9. Tesis & Altyapı (Sabit Kıymetler, Araç & Taşıt, Araç Muayene, Kira Yönetimi, Tesis Hasarı, Tesis Bakım Planı, Tesis Temizlik Planı, Tesis Enerji Haritası, Enerji Takibi, Enerji Verimliliği, Elektrik/Mekanik Proje, Taşeron İş)
-  10. Doküman & Uyum (Dokümanlar, SOP, Doküman Revizyon, Malzeme Sertifika, Hukuki Uyum, Sigorta Poliçeleri, Sözleşmeler, Garanti, Personel Yetki)
-  11. Denetim & İletişim (Risk, Denetim, Saha Denetimi, Muayene, Şikayet, Performans, İletişim, Ziyaretçi)
-- **NavigationContext.tsx**: `warehouse` ve `raw-materials` page type eklenir
-- **App.tsx**: Yeni route'lar eklenir; `equipment-maintenance-history` → `equipment-maintenance`, `employee-perf-review` → `perf-review` protectedPages düzeltilir
-- **DashboardPage.tsx**: Modül istatistik kart sayısı güncellenir, Hızlı Erişim alanına KPI Dashboard ve Raporlama linkleri eklenir
+- Dashboard: add module count summary card ("Toplam Modül: X"), update quick access grid to include Finance and Supply shortcuts
+- Sidebar: add 4 new items to appropriate groups (HR gets salary + leave-requests; Finance gets invoice-management; Audit/Denetim gets customer-orders)
 
 ### Remove
-- Sidebar'dan düz navItems array (gruplandırılmış yapıyla değiştirilir)
+- Nothing to remove
 
 ## Implementation Plan
-1. `WarehousePage.tsx` yaz: depo alanları CRUD, bölge/konum, doluluk %, kapasite uyarısı (%90+)
-2. `RawMaterialsPage.tsx` yaz: hammadde envanteri, min stok uyarısı (kritik badge), tüketim oranı
-3. `NavigationContext.tsx` güncelle: `warehouse` ve `raw-materials` tipleri ekle
-4. `App.tsx` güncelle: import'lar, routes, protectedPages düzeltmeleri
-5. `Sidebar.tsx` tamamen yeniden yaz: collapsible NavGroup bileşeni, 11 grup, aktif grup auto-expand, arama kutusu (isteğe bağlı)
-6. `DashboardPage.tsx` güncelle: hızlı erişim linkleri güncelle
-7. Validate & deploy
+
+1. Create 4 new page files:
+   - `SalaryTrackingPage.tsx` — table of salary records, add/edit modal, pay period filter, gross/net/status columns, totals summary
+   - `InvoiceManagementPage.tsx` — inbound & outbound tabs, invoice no, party name, amount, due date with color alert, status badge
+   - `CustomerOrdersPage.tsx` — order list with customer name, product, quantity, order date, delivery date, priority badge, status flow
+   - `LeaveRequestsPage.tsx` — leave request list with employee name, leave type (Yıllık/Mazeret/Hastalık/Doğum), start/end date, days, status (Beklemede/Onaylandı/Reddedildi), approver, action buttons for admin
+
+2. Register routes in `App.tsx`: `salary-tracking`, `invoice-management`, `customer-orders`, `leave-requests`
+
+3. Update `Sidebar.tsx`:
+   - HR group: add Maaş & Ücret Takibi (DollarSign icon), İzin Talep Yönetimi (CalendarCheck icon) 
+   - Finance group: add Fatura Yönetimi (Receipt icon)
+   - Audit group: add Müşteri Siparişleri (ShoppingBag icon)
+
+4. Update `DashboardPage.tsx`:
+   - Add "Toplam Modül" KPI card (static count ~134)
+   - Add Finance and Supply shortcuts to quick access grid
