@@ -808,3 +808,66 @@ export interface EnergyEfficiencyTarget {
   notes: string;
   createdAt: number;
 }
+
+export interface EquipmentRental {
+  id: string;
+  companyId: string;
+  equipmentName: string;
+  supplier: string;
+  startDate: string;
+  endDate: string;
+  dailyRate: string;
+  currency: string;
+  responsible: string;
+  location: string;
+  status: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface JobApplication {
+  id: string;
+  companyId: string;
+  positionName: string;
+  applicantName: string;
+  applicationDate: string;
+  source: string;
+  department: string;
+  status: string;
+  interviewDate: string;
+  interviewer: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface WarrantyRecord {
+  id: string;
+  companyId: string;
+  itemName: string;
+  brand: string;
+  model: string;
+  serialNumber: string;
+  purchaseDate: string;
+  warrantyStartDate: string;
+  warrantyEndDate: string;
+  supplier: string;
+  warrantyType: string;
+  status: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface ProjectRiskItem {
+  id: string;
+  companyId: string;
+  riskTitle: string;
+  projectName: string;
+  riskCategory: string;
+  probability: string;
+  impact: string;
+  mitigationPlan: string;
+  owner: string;
+  status: string;
+  notes: string;
+  createdAt: number;
+}

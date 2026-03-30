@@ -236,6 +236,26 @@ const navItems: NavItem[] = [
     icon: <Leaf size={18} />,
     page: "energy-targets",
   },
+  {
+    label: "Ekipman Kiralama",
+    icon: <Truck size={18} />,
+    page: "equipment-rental",
+  },
+  {
+    label: "İş Başvuruları",
+    icon: <BriefcaseBusiness size={18} />,
+    page: "job-applications",
+  },
+  {
+    label: "Garanti Takibi",
+    icon: <ShieldCheck size={18} />,
+    page: "warranty",
+  },
+  {
+    label: "Proje Risk Kaydı",
+    icon: <ShieldAlert size={18} />,
+    page: "project-risks",
+  },
   { label: "Bildirimler", icon: <Bell size={18} />, page: "alerts" },
   { label: "Raporlama", icon: <BarChart3 size={18} />, page: "reports" },
   { label: "Ayarlar", icon: <Settings size={18} />, page: "settings" },

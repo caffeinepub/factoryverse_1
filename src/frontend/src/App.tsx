@@ -24,10 +24,12 @@ import { DocumentsPage } from "./pages/DocumentsPage";
 import { EnergyPage } from "./pages/EnergyPage";
 import { EnergyTargetsPage } from "./pages/EnergyTargetsPage";
 import { EnvironmentPage } from "./pages/EnvironmentPage";
+import { EquipmentRentalPage } from "./pages/EquipmentRentalPage";
 import { FaultsPage } from "./pages/FaultsPage";
 import { HRPage } from "./pages/HRPage";
 import { InsurancePage } from "./pages/InsurancePage";
 import { InventoryPage } from "./pages/InventoryPage";
+import { JobApplicationsPage } from "./pages/JobApplicationsPage";
 import { LandingPage } from "./pages/LandingPage";
 import { LeavePage } from "./pages/LeavePage";
 import { LoginPage } from "./pages/LoginPage";
@@ -41,6 +43,7 @@ import { PerformancePage } from "./pages/PerformancePage";
 import { PersonnelPage } from "./pages/PersonnelPage";
 import { PersonnelSelfRegisterPage } from "./pages/PersonnelSelfRegisterPage";
 import { ProductionPage } from "./pages/ProductionPage";
+import { ProjectRisksPage } from "./pages/ProjectRisksPage";
 import { ProjectsPage } from "./pages/ProjectsPage";
 import { PurchaseRequestsPage } from "./pages/PurchaseRequestsPage";
 import { QualityPage } from "./pages/QualityPage";
@@ -62,6 +65,7 @@ import { TrainingPage } from "./pages/TrainingPage";
 import { TrainingProgramPage } from "./pages/TrainingProgramPage";
 import { VehiclesPage } from "./pages/VehiclesPage";
 import { VisitorsPage } from "./pages/VisitorsPage";
+import { WarrantyPage } from "./pages/WarrantyPage";
 import { WorkOrdersPage } from "./pages/WorkOrdersPage";
 
 const protectedPages = [
@@ -262,6 +266,14 @@ function AppRouter() {
       return <InsurancePage />;
     case "energy-targets":
       return <EnergyTargetsPage />;
+    case "equipment-rental":
+      return <EquipmentRentalPage />;
+    case "job-applications":
+      return <JobApplicationsPage />;
+    case "warranty":
+      return <WarrantyPage />;
+    case "project-risks":
+      return <ProjectRisksPage />;
     case "settings":
       return <SettingsPage />;
     default:

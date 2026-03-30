@@ -59,6 +59,10 @@ export type Page =
   | "subcontractor"
   | "insurance"
   | "energy-targets"
+  | "equipment-rental"
+  | "job-applications"
+  | "warranty"
+  | "project-risks"
   | "settings";
 
 interface NavContextValue {
