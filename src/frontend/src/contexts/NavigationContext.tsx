@@ -43,6 +43,8 @@ export type Page =
   | "chemicals"
   | "molds"
   | "stockcount"
+  | "vehicles"
+  | "complaints"
   | "settings";
 
 interface NavContextValue {

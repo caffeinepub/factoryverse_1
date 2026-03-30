@@ -5,6 +5,7 @@ import type {
   CalibrationRecord,
   CapacityRecord,
   ChemicalRecord,
+  ComplaintRecord,
   MaintenanceRecord,
   MoldRecord,
   ProductionRecord,
@@ -12,6 +13,7 @@ import type {
   SafetyIncident,
   StockCountRecord,
   Supplier,
+  VehicleRecord,
 } from "../types";
 import { useActor } from "./useActor";
 
@@ -3188,5 +3190,207 @@ export function useDeleteStockCountRecord() {
       return (actor as any).deleteStockCountRecord(p.adminCode, p.recordId);
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["stockCountRecords"] }),
+  });
+}
+
+// ===== VEHICLE RECORDS =====
+export function useGetVehicleRecords(userCode: string | null) {
+  const { actor, isFetching } = useActor();
+  return useQuery<VehicleRecord[]>({
+    queryKey: ["vehicleRecords", userCode],
+    enabled: !!actor && !isFetching && !!userCode,
+    queryFn: async () => {
+      return (actor as any).getVehicleRecords(userCode);
+    },
+  });
+}
+
+export function useAddVehicleRecord() {
+  const { actor } = useActor();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: {
+      adminCode: string;
+      plate: string;
+      brand: string;
+      model: string;
+      year: string;
+      vehicleType: string;
+      department: string;
+      driver: string;
+      inspectionDate: string;
+      insuranceDate: string;
+      status: string;
+      notes: string;
+    }) => {
+      return (actor as any).addVehicleRecord(
+        p.adminCode,
+        p.plate,
+        p.brand,
+        p.model,
+        p.year,
+        p.vehicleType,
+        p.department,
+        p.driver,
+        p.inspectionDate,
+        p.insuranceDate,
+        p.status,
+        p.notes,
+      );
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["vehicleRecords"] }),
+  });
+}
+
+export function useUpdateVehicleRecord() {
+  const { actor } = useActor();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: {
+      adminCode: string;
+      recordId: string;
+      plate: string;
+      brand: string;
+      model: string;
+      year: string;
+      vehicleType: string;
+      department: string;
+      driver: string;
+      inspectionDate: string;
+      insuranceDate: string;
+      status: string;
+      notes: string;
+    }) => {
+      return (actor as any).updateVehicleRecord(
+        p.adminCode,
+        p.recordId,
+        p.plate,
+        p.brand,
+        p.model,
+        p.year,
+        p.vehicleType,
+        p.department,
+        p.driver,
+        p.inspectionDate,
+        p.insuranceDate,
+        p.status,
+        p.notes,
+      );
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["vehicleRecords"] }),
+  });
+}
+
+export function useDeleteVehicleRecord() {
+  const { actor } = useActor();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { adminCode: string; recordId: string }) => {
+      return (actor as any).deleteVehicleRecord(p.adminCode, p.recordId);
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["vehicleRecords"] }),
+  });
+}
+
+// ===== COMPLAINT RECORDS =====
+export function useGetComplaintRecords(userCode: string | null) {
+  const { actor, isFetching } = useActor();
+  return useQuery<ComplaintRecord[]>({
+    queryKey: ["complaintRecords", userCode],
+    enabled: !!actor && !isFetching && !!userCode,
+    queryFn: async () => {
+      return (actor as any).getComplaintRecords(userCode);
+    },
+  });
+}
+
+export function useAddComplaintRecord() {
+  const { actor } = useActor();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: {
+      adminCode: string;
+      title: string;
+      category: string;
+      source: string;
+      submittedBy: string;
+      assignedTo: string;
+      priority: string;
+      status: string;
+      description: string;
+      resolution: string;
+      submissionDate: string;
+      closedDate: string;
+      notes: string;
+    }) => {
+      return (actor as any).addComplaintRecord(
+        p.adminCode,
+        p.title,
+        p.category,
+        p.source,
+        p.submittedBy,
+        p.assignedTo,
+        p.priority,
+        p.status,
+        p.description,
+        p.resolution,
+        p.submissionDate,
+        p.closedDate,
+        p.notes,
+      );
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["complaintRecords"] }),
+  });
+}
+
+export function useUpdateComplaintRecord() {
+  const { actor } = useActor();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: {
+      adminCode: string;
+      recordId: string;
+      title: string;
+      category: string;
+      source: string;
+      submittedBy: string;
+      assignedTo: string;
+      priority: string;
+      status: string;
+      description: string;
+      resolution: string;
+      submissionDate: string;
+      closedDate: string;
+      notes: string;
+    }) => {
+      return (actor as any).updateComplaintRecord(
+        p.adminCode,
+        p.recordId,
+        p.title,
+        p.category,
+        p.source,
+        p.submittedBy,
+        p.assignedTo,
+        p.priority,
+        p.status,
+        p.description,
+        p.resolution,
+        p.submissionDate,
+        p.closedDate,
+        p.notes,
+      );
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["complaintRecords"] }),
+  });
+}
+
+export function useDeleteComplaintRecord() {
+  const { actor } = useActor();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { adminCode: string; recordId: string }) => {
+      return (actor as any).deleteComplaintRecord(p.adminCode, p.recordId);
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["complaintRecords"] }),
   });
 }

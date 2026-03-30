@@ -523,3 +523,38 @@ export interface StockCountRecord {
   notes: string;
   createdAt: bigint;
 }
+
+export interface VehicleRecord {
+  id: string;
+  companyId: string;
+  plate: string;
+  brand: string;
+  model: string;
+  year: string;
+  vehicleType: string;
+  department: string;
+  driver: string;
+  inspectionDate: string;
+  insuranceDate: string;
+  status: string;
+  notes: string;
+  createdAt: bigint;
+}
+
+export interface ComplaintRecord {
+  id: string;
+  companyId: string;
+  title: string;
+  category: string;
+  source: string;
+  submittedBy: string;
+  assignedTo: string;
+  priority: string;
+  status: string;
+  description: string;
+  resolution: string;
+  submissionDate: string;
+  closedDate: string;
+  notes: string;
+  createdAt: bigint;
+}

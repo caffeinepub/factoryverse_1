@@ -2849,4 +2849,162 @@ actor {
     };
   };
 
+
+  // ===================== ARAÇ & TAŞIT TAKİBİ =====================
+  type VehicleRecord = {
+    id : Text;
+    companyId : Text;
+    plate : Text;
+    brand : Text;
+    model : Text;
+    year : Text;
+    vehicleType : Text;
+    department : Text;
+    driver : Text;
+    inspectionDate : Text;
+    insuranceDate : Text;
+    status : Text;
+    notes : Text;
+    createdAt : Time.Time;
+  };
+
+  stable var vehicleRecords = Map.empty<Text, VehicleRecord>();
+
+  public shared func addVehicleRecord(adminCode : Text, plate : Text, brand : Text, model : Text, year : Text, vehicleType : Text, department : Text, driver : Text, inspectionDate : Text, insuranceDate : Text, status : Text, notes : Text) : async VehicleRecord {
+    let companyId = switch (verifyAdminCode(adminCode)) {
+      case null { Runtime.trap("Invalid admin code") };
+      case (?c) { c };
+    };
+    let id = newCode();
+    let record : VehicleRecord = {
+      id; companyId; plate; brand; model; year; vehicleType; department; driver; inspectionDate; insuranceDate; status; notes;
+      createdAt = Time.now();
+    };
+    vehicleRecords.add(id, record);
+    record;
+  };
+
+  public query func getVehicleRecords(userCode : Text) : async [VehicleRecord] {
+    let companyId = switch (getCompanyIdForUserCode(userCode)) {
+      case null { return [] };
+      case (?id) { id };
+    };
+    var result : [VehicleRecord] = [];
+    for ((_id, r) in vehicleRecords.entries()) {
+      if (r.companyId == companyId) {
+        result := arrayAppend(result, r);
+      };
+    };
+    result;
+  };
+
+  public shared func updateVehicleRecord(adminCode : Text, recordId : Text, plate : Text, brand : Text, model : Text, year : Text, vehicleType : Text, department : Text, driver : Text, inspectionDate : Text, insuranceDate : Text, status : Text, notes : Text) : async VehicleRecord {
+    switch (verifyAdminCode(adminCode)) {
+      case null { Runtime.trap("Invalid admin code") };
+      case (?_) {};
+    };
+    switch (vehicleRecords.get(recordId)) {
+      case null { Runtime.trap("Record not found") };
+      case (?r) {
+        let updated : VehicleRecord = {
+          id = r.id; companyId = r.companyId;
+          plate; brand; model; year; vehicleType; department; driver; inspectionDate; insuranceDate; status; notes;
+          createdAt = r.createdAt;
+        };
+        vehicleRecords.add(recordId, updated);
+        updated;
+      };
+    };
+  };
+
+  public shared func deleteVehicleRecord(adminCode : Text, recordId : Text) : async Bool {
+    switch (verifyAdminCode(adminCode)) {
+      case null { Runtime.trap("Invalid admin code") };
+      case (?_) {};
+    };
+    switch (vehicleRecords.get(recordId)) {
+      case null { false };
+      case (?_) { vehicleRecords.remove(recordId); true };
+    };
+  };
+
+  // ===================== ŞİKAYET & GERİ BİLDİRİM =====================
+  type ComplaintRecord = {
+    id : Text;
+    companyId : Text;
+    title : Text;
+    category : Text;
+    source : Text;
+    submittedBy : Text;
+    assignedTo : Text;
+    priority : Text;
+    status : Text;
+    description : Text;
+    resolution : Text;
+    submissionDate : Text;
+    closedDate : Text;
+    notes : Text;
+    createdAt : Time.Time;
+  };
+
+  stable var complaintRecords = Map.empty<Text, ComplaintRecord>();
+
+  public shared func addComplaintRecord(adminCode : Text, title : Text, category : Text, source : Text, submittedBy : Text, assignedTo : Text, priority : Text, status : Text, description : Text, resolution : Text, submissionDate : Text, closedDate : Text, notes : Text) : async ComplaintRecord {
+    let companyId = switch (verifyAdminCode(adminCode)) {
+      case null { Runtime.trap("Invalid admin code") };
+      case (?c) { c };
+    };
+    let id = newCode();
+    let record : ComplaintRecord = {
+      id; companyId; title; category; source; submittedBy; assignedTo; priority; status; description; resolution; submissionDate; closedDate; notes;
+      createdAt = Time.now();
+    };
+    complaintRecords.add(id, record);
+    record;
+  };
+
+  public query func getComplaintRecords(userCode : Text) : async [ComplaintRecord] {
+    let companyId = switch (getCompanyIdForUserCode(userCode)) {
+      case null { return [] };
+      case (?id) { id };
+    };
+    var result : [ComplaintRecord] = [];
+    for ((_id, r) in complaintRecords.entries()) {
+      if (r.companyId == companyId) {
+        result := arrayAppend(result, r);
+      };
+    };
+    result;
+  };
+
+  public shared func updateComplaintRecord(adminCode : Text, recordId : Text, title : Text, category : Text, source : Text, submittedBy : Text, assignedTo : Text, priority : Text, status : Text, description : Text, resolution : Text, submissionDate : Text, closedDate : Text, notes : Text) : async ComplaintRecord {
+    switch (verifyAdminCode(adminCode)) {
+      case null { Runtime.trap("Invalid admin code") };
+      case (?_) {};
+    };
+    switch (complaintRecords.get(recordId)) {
+      case null { Runtime.trap("Record not found") };
+      case (?r) {
+        let updated : ComplaintRecord = {
+          id = r.id; companyId = r.companyId;
+          title; category; source; submittedBy; assignedTo; priority; status; description; resolution; submissionDate; closedDate; notes;
+          createdAt = r.createdAt;
+        };
+        complaintRecords.add(recordId, updated);
+        updated;
+      };
+    };
+  };
+
+  public shared func deleteComplaintRecord(adminCode : Text, recordId : Text) : async Bool {
+    switch (verifyAdminCode(adminCode)) {
+      case null { Runtime.trap("Invalid admin code") };
+      case (?_) {};
+    };
+    switch (complaintRecords.get(recordId)) {
+      case null { false };
+      case (?_) { complaintRecords.remove(recordId); true };
+    };
+  };
+
 };

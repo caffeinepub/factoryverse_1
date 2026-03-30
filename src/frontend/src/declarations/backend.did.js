@@ -273,6 +273,42 @@ export const CalibrationRecord = IDL.Record({
   'createdAt' : Time,
 });
 
+
+export const VehicleRecord = IDL.Record({
+  'id' : IDL.Text,
+  'companyId' : IDL.Text,
+  'plate' : IDL.Text,
+  'brand' : IDL.Text,
+  'model' : IDL.Text,
+  'year' : IDL.Text,
+  'vehicleType' : IDL.Text,
+  'department' : IDL.Text,
+  'driver' : IDL.Text,
+  'inspectionDate' : IDL.Text,
+  'insuranceDate' : IDL.Text,
+  'status' : IDL.Text,
+  'notes' : IDL.Text,
+  'createdAt' : Time,
+});
+
+export const ComplaintRecord = IDL.Record({
+  'id' : IDL.Text,
+  'companyId' : IDL.Text,
+  'title' : IDL.Text,
+  'category' : IDL.Text,
+  'source' : IDL.Text,
+  'submittedBy' : IDL.Text,
+  'assignedTo' : IDL.Text,
+  'priority' : IDL.Text,
+  'status' : IDL.Text,
+  'description' : IDL.Text,
+  'resolution' : IDL.Text,
+  'submissionDate' : IDL.Text,
+  'closedDate' : IDL.Text,
+  'notes' : IDL.Text,
+  'createdAt' : Time,
+});
+
 export const idlService = IDL.Service({
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
   'addMachine' : IDL.Func(
@@ -499,6 +535,30 @@ export const idlService = IDL.Service({
       [],
     ),
   'deleteCalibrationRecord' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], []),
+  'addVehicleRecord' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+      [VehicleRecord],
+      [],
+    ),
+  'getVehicleRecords' : IDL.Func([IDL.Text], [IDL.Vec(VehicleRecord)], ['query']),
+  'updateVehicleRecord' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+      [VehicleRecord],
+      [],
+    ),
+  'deleteVehicleRecord' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], []),
+  'addComplaintRecord' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+      [ComplaintRecord],
+      [],
+    ),
+  'getComplaintRecords' : IDL.Func([IDL.Text], [IDL.Vec(ComplaintRecord)], ['query']),
+  'updateComplaintRecord' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+      [ComplaintRecord],
+      [],
+    ),
+  'deleteComplaintRecord' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], []),
 });
 
 export const idlInitArgs = [];
@@ -878,6 +938,30 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     'deleteCalibrationRecord' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], []),
+    'addVehicleRecord' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+        [VehicleRecord],
+        [],
+      ),
+    'getVehicleRecords' : IDL.Func([IDL.Text], [IDL.Vec(VehicleRecord)], ['query']),
+    'updateVehicleRecord' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+        [VehicleRecord],
+        [],
+      ),
+    'deleteVehicleRecord' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], []),
+    'addComplaintRecord' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+        [ComplaintRecord],
+        [],
+      ),
+    'getComplaintRecords' : IDL.Func([IDL.Text], [IDL.Vec(ComplaintRecord)], ['query']),
+    'updateComplaintRecord' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+        [ComplaintRecord],
+        [],
+      ),
+    'deleteComplaintRecord' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], []),
   });
 };
 

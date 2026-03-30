@@ -12,6 +12,7 @@ import { CalibrationPage } from "./pages/CalibrationPage";
 import { CapacityPage } from "./pages/CapacityPage";
 import { ChemicalsPage } from "./pages/ChemicalsPage";
 import { CompanyRegisterPage } from "./pages/CompanyRegisterPage";
+import { ComplaintsPage } from "./pages/ComplaintsPage";
 import { ContractsPage } from "./pages/ContractsPage";
 import { CostAnalysisPage } from "./pages/CostAnalysisPage";
 import { DashboardPage } from "./pages/DashboardPage";
@@ -45,6 +46,7 @@ import { SuppliersPage } from "./pages/SuppliersPage";
 import { SupplyChainPage } from "./pages/SupplyChainPage";
 import { TasksPage } from "./pages/TasksPage";
 import { TrainingPage } from "./pages/TrainingPage";
+import { VehiclesPage } from "./pages/VehiclesPage";
 import { VisitorsPage } from "./pages/VisitorsPage";
 import { WorkOrdersPage } from "./pages/WorkOrdersPage";
 
@@ -87,6 +89,8 @@ const protectedPages = [
   "chemicals",
   "molds",
   "stockcount",
+  "vehicles",
+  "complaints",
   "settings",
 ] as const;
 
@@ -198,6 +202,10 @@ function AppRouter() {
       return <MoldsPage />;
     case "stockcount":
       return <StockCountPage />;
+    case "vehicles":
+      return <VehiclesPage />;
+    case "complaints":
+      return <ComplaintsPage />;
     case "settings":
       return <SettingsPage />;
     default:
