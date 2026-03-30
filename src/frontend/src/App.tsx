@@ -4,15 +4,19 @@ import {
   NavigationProvider,
   useNavigation,
 } from "./contexts/NavigationContext";
+import { AbsenceTrackingPage } from "./pages/AbsenceTrackingPage";
+import { ActionPlansPage } from "./pages/ActionPlansPage";
 import { AlertsPage } from "./pages/AlertsPage";
 import { AssetsPage } from "./pages/AssetsPage";
 import { AuditsPage } from "./pages/AuditsPage";
 import { BudgetPage } from "./pages/BudgetPage";
+import { BudgetRevisionPage } from "./pages/BudgetRevisionPage";
 import { CalibrationPage } from "./pages/CalibrationPage";
 import { CapacityPage } from "./pages/CapacityPage";
 import { ChemicalsPage } from "./pages/ChemicalsPage";
 import { CompanyRegisterPage } from "./pages/CompanyRegisterPage";
 import { ComplaintsPage } from "./pages/ComplaintsPage";
+import { ContactDirectoryPage } from "./pages/ContactDirectoryPage";
 import { ContractsPage } from "./pages/ContractsPage";
 import { CostAnalysisPage } from "./pages/CostAnalysisPage";
 import { DashboardPage } from "./pages/DashboardPage";
@@ -27,25 +31,31 @@ import { LeavePage } from "./pages/LeavePage";
 import { LoginPage } from "./pages/LoginPage";
 import { MachinesPage } from "./pages/MachinesPage";
 import { MaintenanceCalendarPage } from "./pages/MaintenanceCalendarPage";
+import { MaintenanceCostPage } from "./pages/MaintenanceCostPage";
 import { MaintenancePage } from "./pages/MaintenancePage";
+import { MilestonesPage } from "./pages/MilestonesPage";
 import { MoldsPage } from "./pages/MoldsPage";
 import { PerformancePage } from "./pages/PerformancePage";
 import { PersonnelPage } from "./pages/PersonnelPage";
 import { PersonnelSelfRegisterPage } from "./pages/PersonnelSelfRegisterPage";
 import { ProductionPage } from "./pages/ProductionPage";
 import { ProjectsPage } from "./pages/ProjectsPage";
+import { PurchaseRequestsPage } from "./pages/PurchaseRequestsPage";
 import { QualityPage } from "./pages/QualityPage";
 import { ReportsPage } from "./pages/ReportsPage";
 import { RiskPage } from "./pages/RiskPage";
+import { SafetyIncidentPage } from "./pages/SafetyIncidentPage";
 import { SafetyPage } from "./pages/SafetyPage";
 import { SettingsPage } from "./pages/SettingsPage";
 import { ShiftsPage } from "./pages/ShiftsPage";
+import { SopLibraryPage } from "./pages/SopLibraryPage";
 import { StockCountPage } from "./pages/StockCountPage";
 import { SupplierEvalPage } from "./pages/SupplierEvalPage";
 import { SuppliersPage } from "./pages/SuppliersPage";
 import { SupplyChainPage } from "./pages/SupplyChainPage";
 import { TasksPage } from "./pages/TasksPage";
 import { TrainingPage } from "./pages/TrainingPage";
+import { TrainingProgramPage } from "./pages/TrainingProgramPage";
 import { VehiclesPage } from "./pages/VehiclesPage";
 import { VisitorsPage } from "./pages/VisitorsPage";
 import { WorkOrdersPage } from "./pages/WorkOrdersPage";
@@ -92,6 +102,16 @@ const protectedPages = [
   "vehicles",
   "complaints",
   "settings",
+  "safety-incident",
+  "budget-revision",
+  "maintenance-cost",
+  "training-program",
+  "action-plans",
+  "purchase-requests",
+  "absence-tracking",
+  "milestones",
+  "contact-directory",
+  "sop-library",
 ] as const;
 
 function AppRouter() {
@@ -206,6 +226,26 @@ function AppRouter() {
       return <VehiclesPage />;
     case "complaints":
       return <ComplaintsPage />;
+    case "safety-incident":
+      return <SafetyIncidentPage />;
+    case "budget-revision":
+      return <BudgetRevisionPage />;
+    case "maintenance-cost":
+      return <MaintenanceCostPage />;
+    case "training-program":
+      return <TrainingProgramPage />;
+    case "action-plans":
+      return <ActionPlansPage />;
+    case "purchase-requests":
+      return <PurchaseRequestsPage />;
+    case "absence-tracking":
+      return <AbsenceTrackingPage />;
+    case "milestones":
+      return <MilestonesPage />;
+    case "contact-directory":
+      return <ContactDirectoryPage />;
+    case "sop-library":
+      return <SopLibraryPage />;
     case "settings":
       return <SettingsPage />;
     default:

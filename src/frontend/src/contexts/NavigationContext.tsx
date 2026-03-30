@@ -49,6 +49,12 @@ export type Page =
   | "training-program"
   | "safety-incident"
   | "budget-revision"
+  | "action-plans"
+  | "purchase-requests"
+  | "absence-tracking"
+  | "milestones"
+  | "contact-directory"
+  | "sop-library"
   | "settings";
 
 interface NavContextValue {

@@ -631,3 +631,107 @@ export interface BudgetRevisionRecord {
   notes: string;
   createdAt: bigint;
 }
+
+export interface ActionPlan {
+  id: string;
+  companyId: string;
+  title: string;
+  actionType: string;
+  priority: string;
+  responsiblePerson: string;
+  department: string;
+  dueDate: string;
+  completionDate: string;
+  linkedIssue: string;
+  description: string;
+  status: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface PurchaseRequest {
+  id: string;
+  companyId: string;
+  itemName: string;
+  quantity: string;
+  unit: string;
+  estimatedCost: string;
+  currency: string;
+  requestedBy: string;
+  department: string;
+  requestDate: string;
+  neededByDate: string;
+  supplier: string;
+  category: string;
+  justification: string;
+  status: string;
+  approvedBy: string;
+  approvalDate: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface AbsenceRecord {
+  id: string;
+  companyId: string;
+  employeeName: string;
+  department: string;
+  absenceType: string;
+  startDate: string;
+  endDate: string;
+  days: string;
+  reason: string;
+  approvedBy: string;
+  status: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface Milestone {
+  id: string;
+  companyId: string;
+  projectName: string;
+  milestoneName: string;
+  description: string;
+  plannedDate: string;
+  actualDate: string;
+  completionPercent: string;
+  deliverables: string;
+  assignedTo: string;
+  status: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface ContactEntry {
+  id: string;
+  companyId: string;
+  name: string;
+  company: string;
+  contactType: string;
+  department: string;
+  role: string;
+  phone: string;
+  email: string;
+  mobile: string;
+  address: string;
+  notes: string;
+  createdAt: number;
+}
+
+export interface SopEntry {
+  id: string;
+  companyId: string;
+  title: string;
+  category: string;
+  documentNumber: string;
+  revisionNumber: string;
+  effectiveDate: string;
+  expiryDate: string;
+  owner: string;
+  department: string;
+  description: string;
+  status: string;
+  notes: string;
+  createdAt: number;
+}

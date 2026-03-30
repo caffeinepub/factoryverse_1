@@ -1,19 +1,25 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { Company, Machine, Personnel } from "../backend";
 import type {
+  AbsenceRecord,
+  ActionPlan,
   BudgetItem,
   BudgetRevisionRecord,
   CalibrationRecord,
   CapacityRecord,
   ChemicalRecord,
   ComplaintRecord,
+  ContactEntry,
   MaintenanceCostRecord,
   MaintenanceRecord,
+  Milestone,
   MoldRecord,
   ProductionRecord,
   Project,
+  PurchaseRequest,
   SafetyIncident,
   SafetyIncidentRecord,
+  SopEntry,
   StockCountRecord,
   Supplier,
   TrainingProgramRecord,
@@ -3834,5 +3840,363 @@ export function useDeleteBudgetRevisionRecord() {
     },
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["budgetRevisionRecords"] }),
+  });
+}
+
+// ===== LOCAL STORAGE HELPERS =====
+function lsGet<T>(key: string): T[] {
+  try {
+    return JSON.parse(localStorage.getItem(key) ?? "[]") as T[];
+  } catch {
+    return [];
+  }
+}
+function lsSet<T>(key: string, val: T[]) {
+  localStorage.setItem(key, JSON.stringify(val));
+}
+function lsKey(ns: string, companyId: string) {
+  return `fv_${ns}_${companyId}`;
+}
+
+// ===== ACTION PLANS =====
+
+export function useGetActionPlans(companyId: string | null) {
+  return useQuery<ActionPlan[]>({
+    queryKey: ["actionPlans", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<ActionPlan>(lsKey("actionPlans", companyId));
+    },
+  });
+}
+export function useAddActionPlan() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: Omit<ActionPlan, "id" | "createdAt">) => {
+      const all = lsGet<ActionPlan>(lsKey("actionPlans", p.companyId));
+      const rec: ActionPlan = {
+        ...p,
+        id: crypto.randomUUID(),
+        createdAt: Date.now(),
+      };
+      lsSet(lsKey("actionPlans", p.companyId), [...all, rec]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["actionPlans", v.companyId] }),
+  });
+}
+export function useUpdateActionPlan() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: ActionPlan) => {
+      const all = lsGet<ActionPlan>(lsKey("actionPlans", p.companyId));
+      lsSet(
+        lsKey("actionPlans", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["actionPlans", v.companyId] }),
+  });
+}
+export function useDeleteActionPlan() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<ActionPlan>(lsKey("actionPlans", p.companyId));
+      lsSet(
+        lsKey("actionPlans", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["actionPlans", v.companyId] }),
+  });
+}
+
+// ===== PURCHASE REQUESTS =====
+export function useGetPurchaseRequests(companyId: string | null) {
+  return useQuery<PurchaseRequest[]>({
+    queryKey: ["purchaseRequests", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<PurchaseRequest>(lsKey("purchaseRequests", companyId));
+    },
+  });
+}
+export function useAddPurchaseRequest() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: Omit<PurchaseRequest, "id" | "createdAt">) => {
+      const all = lsGet<PurchaseRequest>(
+        lsKey("purchaseRequests", p.companyId),
+      );
+      const rec: PurchaseRequest = {
+        ...p,
+        id: crypto.randomUUID(),
+        createdAt: Date.now(),
+      };
+      lsSet(lsKey("purchaseRequests", p.companyId), [...all, rec]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["purchaseRequests", v.companyId] }),
+  });
+}
+export function useUpdatePurchaseRequest() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: PurchaseRequest) => {
+      const all = lsGet<PurchaseRequest>(
+        lsKey("purchaseRequests", p.companyId),
+      );
+      lsSet(
+        lsKey("purchaseRequests", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["purchaseRequests", v.companyId] }),
+  });
+}
+export function useDeletePurchaseRequest() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<PurchaseRequest>(
+        lsKey("purchaseRequests", p.companyId),
+      );
+      lsSet(
+        lsKey("purchaseRequests", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["purchaseRequests", v.companyId] }),
+  });
+}
+
+// ===== ABSENCE RECORDS =====
+export function useGetAbsenceRecords(companyId: string | null) {
+  return useQuery<AbsenceRecord[]>({
+    queryKey: ["absenceRecords", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<AbsenceRecord>(lsKey("absenceRecords", companyId));
+    },
+  });
+}
+export function useAddAbsenceRecord() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: Omit<AbsenceRecord, "id" | "createdAt">) => {
+      const all = lsGet<AbsenceRecord>(lsKey("absenceRecords", p.companyId));
+      const rec: AbsenceRecord = {
+        ...p,
+        id: crypto.randomUUID(),
+        createdAt: Date.now(),
+      };
+      lsSet(lsKey("absenceRecords", p.companyId), [...all, rec]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["absenceRecords", v.companyId] }),
+  });
+}
+export function useUpdateAbsenceRecord() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: AbsenceRecord) => {
+      const all = lsGet<AbsenceRecord>(lsKey("absenceRecords", p.companyId));
+      lsSet(
+        lsKey("absenceRecords", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["absenceRecords", v.companyId] }),
+  });
+}
+export function useDeleteAbsenceRecord() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<AbsenceRecord>(lsKey("absenceRecords", p.companyId));
+      lsSet(
+        lsKey("absenceRecords", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["absenceRecords", v.companyId] }),
+  });
+}
+
+// ===== MILESTONES =====
+export function useGetMilestones(companyId: string | null) {
+  return useQuery<Milestone[]>({
+    queryKey: ["milestones", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<Milestone>(lsKey("milestones", companyId));
+    },
+  });
+}
+export function useAddMilestone() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: Omit<Milestone, "id" | "createdAt">) => {
+      const all = lsGet<Milestone>(lsKey("milestones", p.companyId));
+      const rec: Milestone = {
+        ...p,
+        id: crypto.randomUUID(),
+        createdAt: Date.now(),
+      };
+      lsSet(lsKey("milestones", p.companyId), [...all, rec]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["milestones", v.companyId] }),
+  });
+}
+export function useUpdateMilestone() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: Milestone) => {
+      const all = lsGet<Milestone>(lsKey("milestones", p.companyId));
+      lsSet(
+        lsKey("milestones", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["milestones", v.companyId] }),
+  });
+}
+export function useDeleteMilestone() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<Milestone>(lsKey("milestones", p.companyId));
+      lsSet(
+        lsKey("milestones", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["milestones", v.companyId] }),
+  });
+}
+
+// ===== CONTACTS =====
+export function useGetContacts(companyId: string | null) {
+  return useQuery<ContactEntry[]>({
+    queryKey: ["contacts", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<ContactEntry>(lsKey("contacts", companyId));
+    },
+  });
+}
+export function useAddContact() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: Omit<ContactEntry, "id" | "createdAt">) => {
+      const all = lsGet<ContactEntry>(lsKey("contacts", p.companyId));
+      const rec: ContactEntry = {
+        ...p,
+        id: crypto.randomUUID(),
+        createdAt: Date.now(),
+      };
+      lsSet(lsKey("contacts", p.companyId), [...all, rec]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["contacts", v.companyId] }),
+  });
+}
+export function useUpdateContact() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: ContactEntry) => {
+      const all = lsGet<ContactEntry>(lsKey("contacts", p.companyId));
+      lsSet(
+        lsKey("contacts", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["contacts", v.companyId] }),
+  });
+}
+export function useDeleteContact() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<ContactEntry>(lsKey("contacts", p.companyId));
+      lsSet(
+        lsKey("contacts", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["contacts", v.companyId] }),
+  });
+}
+
+// ===== SOP LIBRARY =====
+export function useGetSopEntries(companyId: string | null) {
+  return useQuery<SopEntry[]>({
+    queryKey: ["sopEntries", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      if (!companyId) return [];
+      return lsGet<SopEntry>(lsKey("sopEntries", companyId));
+    },
+  });
+}
+export function useAddSopEntry() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: Omit<SopEntry, "id" | "createdAt">) => {
+      const all = lsGet<SopEntry>(lsKey("sopEntries", p.companyId));
+      const rec: SopEntry = {
+        ...p,
+        id: crypto.randomUUID(),
+        createdAt: Date.now(),
+      };
+      lsSet(lsKey("sopEntries", p.companyId), [...all, rec]);
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["sopEntries", v.companyId] }),
+  });
+}
+export function useUpdateSopEntry() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: SopEntry) => {
+      const all = lsGet<SopEntry>(lsKey("sopEntries", p.companyId));
+      lsSet(
+        lsKey("sopEntries", p.companyId),
+        all.map((x) => (x.id === p.id ? p : x)),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["sopEntries", v.companyId] }),
+  });
+}
+export function useDeleteSopEntry() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; companyId: string }) => {
+      const all = lsGet<SopEntry>(lsKey("sopEntries", p.companyId));
+      lsSet(
+        lsKey("sopEntries", p.companyId),
+        all.filter((x) => x.id !== p.id),
+      );
+    },
+    onSuccess: (_d, v) =>
+      qc.invalidateQueries({ queryKey: ["sopEntries", v.companyId] }),
   });
 }
