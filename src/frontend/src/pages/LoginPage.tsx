@@ -63,11 +63,24 @@ export function LoginPage() {
         return;
       }
 
+      let allowedModules: string[] | null = null;
+      if (resolvedType === "personnel") {
+        try {
+          const extActor = actor as unknown as {
+            getMyAllowedModules(code: string): Promise<string[] | null>;
+          };
+          allowedModules = await extActor.getMyAllowedModules(trimmedCode);
+        } catch {
+          allowedModules = null;
+        }
+      }
+
       login({
         userCode: trimmedCode,
         userType: resolvedType,
         companyName: company.name,
         companyMode: company.mode,
+        allowedModules: resolvedType === "personnel" ? allowedModules : null,
       });
       navigate("dashboard");
     } catch (e) {

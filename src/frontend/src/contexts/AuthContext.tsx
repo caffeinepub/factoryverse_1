@@ -1,10 +1,4 @@
-import {
-  type ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { type ReactNode, createContext, useContext, useState } from "react";
 
 export type UserType = "admin" | "personnel";
 
@@ -14,6 +8,7 @@ export interface AuthSession {
   companyName: string;
   companyMode: string;
   userName?: string;
+  allowedModules: string[] | null; // null = unrestricted (admin or no restriction set)
 }
 
 interface AuthContextValue {
@@ -30,6 +25,7 @@ const STORAGE_KEYS = {
   companyName: "factoryverse_companyName",
   companyMode: "factoryverse_companyMode",
   userName: "factoryverse_userName",
+  allowedModules: "factoryverse_allowedModules",
 };
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -41,12 +37,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const companyName = localStorage.getItem(STORAGE_KEYS.companyName);
     const companyMode = localStorage.getItem(STORAGE_KEYS.companyMode);
     if (userCode && userType && companyName && companyMode) {
+      let allowedModules: string[] | null = null;
+      const stored = localStorage.getItem(STORAGE_KEYS.allowedModules);
+      if (stored) {
+        try {
+          allowedModules = JSON.parse(stored);
+        } catch {
+          allowedModules = null;
+        }
+      }
       return {
         userCode,
         userType,
         companyName,
         companyMode,
         userName: localStorage.getItem(STORAGE_KEYS.userName) || undefined,
+        allowedModules,
       };
     }
     return null;
@@ -58,6 +64,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(STORAGE_KEYS.companyName, s.companyName);
     localStorage.setItem(STORAGE_KEYS.companyMode, s.companyMode);
     if (s.userName) localStorage.setItem(STORAGE_KEYS.userName, s.userName);
+    if (s.allowedModules !== null && s.allowedModules !== undefined) {
+      localStorage.setItem(
+        STORAGE_KEYS.allowedModules,
+        JSON.stringify(s.allowedModules),
+      );
+    } else {
+      localStorage.removeItem(STORAGE_KEYS.allowedModules);
+    }
     setSession(s);
   };
 

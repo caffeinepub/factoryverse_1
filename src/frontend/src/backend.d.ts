@@ -130,6 +130,20 @@ export interface InventoryItem {
     status: string;
     createdAt: Time;
 }
+export interface PermissionRole {
+    id: string;
+    companyId: string;
+    name: string;
+    modules: Array<string>;
+    createdAt: Time;
+}
+export interface PersonnelPermission {
+    loginCode: string;
+    companyId: string;
+    roleId: string;
+    additionalModules: Array<string>;
+    removedModules: Array<string>;
+}
 export enum UserRole {
     admin = "admin",
     user = "user",
@@ -184,4 +198,11 @@ export interface backendInterface {
     getInventoryItems(userCode: string): Promise<Array<InventoryItem>>;
     updateDocument(adminCode: string, docId: string, name: string, category: string, documentType: string, referenceNumber: string, date: string, description: string, linkedMachineId: string, linkedProjectId: string, status: string): Promise<Document>;
     updateInventoryItem(adminCode: string, itemId: string, name: string, category: string, unit: string, currentStock: bigint, minimumStock: bigint, location: string, supplierName: string, notes: string): Promise<InventoryItem>;
+    addPermissionRole(adminCode: string, roleName: string, modules: Array<string>): Promise<PermissionRole>;
+    updatePermissionRole(adminCode: string, roleId: string, roleName: string, modules: Array<string>): Promise<PermissionRole>;
+    deletePermissionRole(adminCode: string, roleId: string): Promise<boolean>;
+    getPermissionRoles(adminCode: string): Promise<Array<PermissionRole>>;
+    setPersonnelPermission(adminCode: string, loginCode: string, roleId: string, additionalModules: Array<string>, removedModules: Array<string>): Promise<PersonnelPermission>;
+    getPersonnelPermission(adminCode: string, loginCode: string): Promise<PersonnelPermission | null>;
+    getMyAllowedModules(loginCode: string): Promise<Array<string> | null>;
 }

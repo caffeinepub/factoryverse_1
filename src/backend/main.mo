@@ -3325,4 +3325,143 @@ actor {
     };
   };
 
+
+  // ===================== YETKİ YÖNETİMİ =====================
+
+  type PermissionRole = {
+    id : Text;
+    companyId : Text;
+    name : Text;
+    modules : [Text];
+    createdAt : Time.Time;
+  };
+
+  type PersonnelPermission = {
+    loginCode : Text;
+    companyId : Text;
+    roleId : Text;
+    additionalModules : [Text];
+    removedModules : [Text];
+  };
+
+  stable var permissionRoles = Map.empty<Text, PermissionRole>();
+  stable var personnelPermissions = Map.empty<Text, PersonnelPermission>();
+
+  public shared func addPermissionRole(adminCode : Text, roleName : Text, modules : [Text]) : async PermissionRole {
+    let companyId = switch (verifyAdminCode(adminCode)) {
+      case null { Runtime.trap("Invalid admin code") };
+      case (?c) { c };
+    };
+    let id = newCode();
+    let role : PermissionRole = {
+      id; companyId; name = roleName; modules;
+      createdAt = Time.now();
+    };
+    permissionRoles.add(id, role);
+    role;
+  };
+
+  public query func getPermissionRoles(adminCode : Text) : async [PermissionRole] {
+    let companyId = switch (verifyAdminCode(adminCode)) {
+      case null { return [] };
+      case (?c) { c };
+    };
+    var result : [PermissionRole] = [];
+    for ((_id, r) in permissionRoles.entries()) {
+      if (r.companyId == companyId) {
+        result := arrayAppend(result, r);
+      };
+    };
+    result;
+  };
+
+  public shared func updatePermissionRole(adminCode : Text, roleId : Text, roleName : Text, modules : [Text]) : async PermissionRole {
+    switch (verifyAdminCode(adminCode)) {
+      case null { Runtime.trap("Invalid admin code") };
+      case (?_) {};
+    };
+    switch (permissionRoles.get(roleId)) {
+      case null { Runtime.trap("Role not found") };
+      case (?r) {
+        let updated : PermissionRole = {
+          id = r.id; companyId = r.companyId;
+          name = roleName; modules;
+          createdAt = r.createdAt;
+        };
+        permissionRoles.add(roleId, updated);
+        updated;
+      };
+    };
+  };
+
+  public shared func deletePermissionRole(adminCode : Text, roleId : Text) : async Bool {
+    switch (verifyAdminCode(adminCode)) {
+      case null { Runtime.trap("Invalid admin code") };
+      case (?_) {};
+    };
+    switch (permissionRoles.get(roleId)) {
+      case null { false };
+      case (?_) { permissionRoles.remove(roleId); true };
+    };
+  };
+
+  public shared func setPersonnelPermission(adminCode : Text, loginCode : Text, roleId : Text, additionalModules : [Text], removedModules : [Text]) : async PersonnelPermission {
+    let companyId = switch (verifyAdminCode(adminCode)) {
+      case null { Runtime.trap("Invalid admin code") };
+      case (?c) { c };
+    };
+    let perm : PersonnelPermission = {
+      loginCode; companyId; roleId; additionalModules; removedModules;
+    };
+    personnelPermissions.add(loginCode, perm);
+    perm;
+  };
+
+  public query func getPersonnelPermission(adminCode : Text, loginCode : Text) : async ?PersonnelPermission {
+    switch (verifyAdminCode(adminCode)) {
+      case null { return null };
+      case (?_) {};
+    };
+    personnelPermissions.get(loginCode);
+  };
+
+  public query func getMyAllowedModules(loginCode : Text) : async ?[Text] {
+    switch (getCompanyIdForUserCode(loginCode)) {
+      case null { return ?[] };
+      case (?_) {};
+    };
+    switch (personnelPermissions.get(loginCode)) {
+      case null { return null };
+      case (?perm) {
+        var allowed : [Text] = [];
+        if (perm.roleId != "") {
+          switch (permissionRoles.get(perm.roleId)) {
+            case null {};
+            case (?role) { allowed := role.modules };
+          };
+        };
+        for (m in perm.additionalModules.vals()) {
+          var found = false;
+          for (existing in allowed.vals()) {
+            if (existing == m) { found := true };
+          };
+          if (not found) {
+            allowed := arrayAppend(allowed, m);
+          };
+        };
+        var filtered : [Text] = [];
+        for (m in allowed.vals()) {
+          var shouldRemove = false;
+          for (rm in perm.removedModules.vals()) {
+            if (rm == m) { shouldRemove := true };
+          };
+          if (not shouldRemove) {
+            filtered := arrayAppend(filtered, m);
+          };
+        };
+        ?filtered;
+      };
+    };
+  };
+
 };

@@ -80,6 +80,7 @@ interface NavItem {
   label: string;
   icon: React.ReactNode;
   page: Page;
+  adminOnly?: boolean;
 }
 
 interface NavGroup {
@@ -110,6 +111,12 @@ const navGroups: NavGroup[] = [
       { label: "Raporlama", icon: <BarChart3 size={S} />, page: "reports" },
       { label: "Bildirimler", icon: <Bell size={S} />, page: "alerts" },
       { label: "Ayarlar", icon: <Settings size={S} />, page: "settings" },
+      {
+        label: "Yetki Yönetimi",
+        icon: <ShieldCheck size={S} />,
+        page: "permission-roles",
+        adminOnly: true,
+      },
     ],
   },
   {
@@ -157,7 +164,7 @@ const navGroups: NavGroup[] = [
         page: "career-planning",
       },
       {
-        label: "Performans Değerlendirme",
+        label: "Performans Değlendirme",
         icon: <Star size={S} />,
         page: "perf-review",
       },
@@ -315,7 +322,7 @@ const navGroups: NavGroup[] = [
         page: "spare-parts",
       },
       {
-        label: "Yedek Parça Siparişleri",
+        label: "Yedek Parça Siparilşleri",
         icon: <ShoppingCart size={S} />,
         page: "spare-parts-orders",
       },
@@ -328,12 +335,12 @@ const navGroups: NavGroup[] = [
     items: [
       { label: "Tedarikçiler", icon: <Truck size={S} />, page: "suppliers" },
       {
-        label: "Tedarikçi Değerlendirme",
+        label: "Tedarikçi Değlendirme",
         icon: <Star size={S} />,
         page: "supplier-eval",
       },
       {
-        label: "Tedarikçi Siparişleri",
+        label: "Tedarikçi Siparilşleri",
         icon: <ShoppingBag size={S} />,
         page: "supplier-orders",
       },
@@ -348,7 +355,7 @@ const navGroups: NavGroup[] = [
         page: "supplier-scorecard",
       },
       {
-        label: "Tedarikçi Şikayetleri",
+        label: "Tedarikçi şikayetleri",
         icon: <AlertCircle size={S} />,
         page: "supplier-complaints",
       },
@@ -660,7 +667,7 @@ const navGroups: NavGroup[] = [
         page: "visitors",
       },
       {
-        label: "Müşteri Siparişleri",
+        label: "Müşteri Siparilşleri",
         icon: <ShoppingBag size={S} />,
         page: "customer-orders",
       },
@@ -683,6 +690,9 @@ interface SidebarProps {
 export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
   const { session, logout } = useAuth();
   const { page, navigate } = useNavigation();
+
+  const isAdmin = session?.userType === "admin";
+  const allowedModules = session?.allowedModules ?? null;
 
   const [openGroups, setOpenGroups] = useState<Set<string>>(() => {
     const groupId = findGroupForPage(page);
@@ -722,6 +732,18 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
   const initials = session?.companyName
     ? session.companyName.slice(0, 2).toUpperCase()
     : "FV";
+
+  const getVisibleItems = (group: NavGroup): NavItem[] => {
+    return group.items.filter((item) => {
+      // Hide adminOnly items from non-admins
+      if (item.adminOnly && !isAdmin) return false;
+      // Filter by allowedModules for restricted personnel
+      if (!isAdmin && allowedModules !== null) {
+        return allowedModules.includes(item.page);
+      }
+      return true;
+    });
+  };
 
   const sidebarContent = (
     <div
@@ -777,8 +799,12 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
       {/* Nav Groups */}
       <nav className="flex-1 px-2 py-3 overflow-y-auto space-y-0.5">
         {navGroups.map((group) => {
+          const visibleItems = getVisibleItems(group);
+          // Hide groups with no visible items
+          if (visibleItems.length === 0) return null;
+
           const isOpen = openGroups.has(group.id);
-          const hasActive = group.items.some((item) => item.page === page);
+          const hasActive = visibleItems.some((item) => item.page === page);
 
           return (
             <div key={group.id}>
@@ -816,7 +842,7 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
                     style={{ overflow: "hidden" }}
                   >
                     <div className="pl-3 pb-1 space-y-0.5">
-                      {group.items.map((item) => {
+                      {visibleItems.map((item) => {
                         const isActive = page === item.page;
                         return (
                           <button

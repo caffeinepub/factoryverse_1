@@ -68,6 +68,7 @@ import { MilestonesPage } from "./pages/MilestonesPage";
 import { MoldsPage } from "./pages/MoldsPage";
 import { OccupationalHealthPage } from "./pages/OccupationalHealthPage";
 import { PerformancePage } from "./pages/PerformancePage";
+import { PermissionRolesPage } from "./pages/PermissionRolesPage";
 import { PersonnelAuthPage } from "./pages/PersonnelAuthPage";
 import { PersonnelHandoverPage } from "./pages/PersonnelHandoverPage";
 import { PersonnelPage } from "./pages/PersonnelPage";
@@ -244,6 +245,7 @@ const protectedPages = [
   "invoice-management",
   "customer-orders",
   "leave-requests",
+  "permission-roles",
 ] as const;
 
 function AppRouter() {
@@ -512,6 +514,8 @@ function AppRouter() {
       return <CustomerOrdersPage />;
     case "leave-requests":
       return <LeaveRequestsPage />;
+    case "permission-roles":
+      return <PermissionRolesPage />;
     default:
       return <LandingPage />;
   }

@@ -121,7 +121,8 @@ export type Page =
   | "salary-tracking"
   | "invoice-management"
   | "customer-orders"
-  | "leave-requests";
+  | "leave-requests"
+  | "permission-roles";
 
 interface NavContextValue {
   page: Page;
