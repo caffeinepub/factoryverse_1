@@ -4,7 +4,9 @@ import {
   Activity,
   AlertTriangle,
   Bell,
+  Factory,
   FolderKanban,
+  LayoutDashboard,
   Plus,
   ShieldAlert,
   TrendingUp,
@@ -258,23 +260,56 @@ export function DashboardPage() {
               Hızlı Erişim
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {(
-                [
-                  { label: "Personel", page: "personnel" as const },
-                  { label: "Projeler", page: "projects" as const },
-                  { label: "Bakım", page: "maintenance" as const },
-                  { label: "İSG", page: "safety" as const },
-                  { label: "Bildirimler", page: "alerts" as const },
-                  { label: "Raporlama", page: "reports" as const },
-                ] as const
-              ).map((item) => (
+              {[
+                {
+                  label: "Personel",
+                  page: "personnel" as const,
+                  icon: <Users size={16} />,
+                },
+                {
+                  label: "Projeler",
+                  page: "projects" as const,
+                  icon: <FolderKanban size={16} />,
+                },
+                {
+                  label: "Bakım",
+                  page: "maintenance" as const,
+                  icon: <Wrench size={16} />,
+                },
+                {
+                  label: "İSG",
+                  page: "safety" as const,
+                  icon: <ShieldAlert size={16} />,
+                },
+                {
+                  label: "Üretim",
+                  page: "production" as const,
+                  icon: <Factory size={16} />,
+                },
+                {
+                  label: "Kalite",
+                  page: "quality" as const,
+                  icon: <Activity size={16} />,
+                },
+                {
+                  label: "KPI Dashboard",
+                  page: "kpi-dashboard" as const,
+                  icon: <LayoutDashboard size={16} />,
+                },
+                {
+                  label: "Raporlama",
+                  page: "reports" as const,
+                  icon: <TrendingUp size={16} />,
+                },
+              ].map((item) => (
                 <Button
                   key={item.page}
                   variant="outline"
-                  className="h-12"
+                  className="h-12 gap-2"
                   onClick={() => navigate(item.page)}
                   data-ocid={`dashboard.${item.page}.link`}
                 >
+                  {item.icon}
                   {item.label}
                 </Button>
               ))}
