@@ -430,6 +430,32 @@ export class Backend implements backendInterface {
             return from_candid_Personnel_n4(this._uploadFile, this._downloadFile, result);
         }
     }
+    // RBAC Methods
+    async addPermissionRole(adminCode: string, roleName: string, modules: string[]): Promise<any> {
+        return this.actor.addPermissionRole(adminCode, roleName, modules);
+    }
+    async updatePermissionRole(adminCode: string, roleId: string, roleName: string, modules: string[]): Promise<any> {
+        return this.actor.updatePermissionRole(adminCode, roleId, roleName, modules);
+    }
+    async deletePermissionRole(adminCode: string, roleId: string): Promise<boolean> {
+        return this.actor.deletePermissionRole(adminCode, roleId);
+    }
+    async getPermissionRoles(adminCode: string): Promise<any[]> {
+        return this.actor.getPermissionRoles(adminCode);
+    }
+    async setPersonnelPermission(adminCode: string, loginCode: string, roleId: string, additionalModules: string[], removedModules: string[]): Promise<any> {
+        return this.actor.setPersonnelPermission(adminCode, loginCode, roleId, additionalModules, removedModules);
+    }
+    async getPersonnelPermission(adminCode: string, loginCode: string): Promise<any> {
+        const result = await this.actor.getPersonnelPermission(adminCode, loginCode);
+        return result.length > 0 ? result[0] : null;
+    }
+    async registerCompanyAtomic(arg0: string, arg1: string): Promise<any> {
+        return this.actor.registerCompanyAtomic(arg0, arg1);
+    }
+    async registerPersonnelAtomic(arg0: string): Promise<any> {
+        return this.actor.registerPersonnelAtomic(arg0);
+    }
 }
 function from_candid_Machine_n1(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Machine): Machine {
     return from_candid_record_n2(_uploadFile, _downloadFile, value);
