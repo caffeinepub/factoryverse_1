@@ -801,6 +801,15 @@ export const idlFactory = ({ IDL }) => {
     'createdAt' : Time,
   });
 
+  const PermissionRole = IDL.Record({
+    'id': IDL.Text, 'companyId': IDL.Text, 'name': IDL.Text,
+    'modules': IDL.Vec(IDL.Text), 'createdAt': IDL.Int,
+  });
+  const PersonnelPermission = IDL.Record({
+    'loginCode': IDL.Text, 'companyId': IDL.Text, 'roleId': IDL.Text,
+    'additionalModules': IDL.Vec(IDL.Text), 'removedModules': IDL.Vec(IDL.Text),
+  });
+
   return IDL.Service({
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
     'addMachine' : IDL.Func(
@@ -1050,6 +1059,13 @@ export const idlFactory = ({ IDL }) => {
         [BudgetRevisionRecord], [],
       ),
     'deleteBudgetRevisionRecord' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], []),
+    'addPermissionRole' : IDL.Func([IDL.Text, IDL.Text, IDL.Vec(IDL.Text)], [PermissionRole], []),
+    'updatePermissionRole' : IDL.Func([IDL.Text, IDL.Text, IDL.Text, IDL.Vec(IDL.Text)], [PermissionRole], []),
+    'deletePermissionRole' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], []),
+    'getPermissionRoles' : IDL.Func([IDL.Text], [IDL.Vec(PermissionRole)], ['query']),
+    'setPersonnelPermission' : IDL.Func([IDL.Text, IDL.Text, IDL.Text, IDL.Vec(IDL.Text), IDL.Vec(IDL.Text)], [PersonnelPermission], []),
+    'getPersonnelPermission' : IDL.Func([IDL.Text, IDL.Text], [IDL.Opt(PersonnelPermission)], ['query']),
+    'getMyAllowedModules' : IDL.Func([IDL.Text], [IDL.Opt(IDL.Vec(IDL.Text))], ['query']),
   });
 };
 export const init = ({ IDL }) => { return []; };

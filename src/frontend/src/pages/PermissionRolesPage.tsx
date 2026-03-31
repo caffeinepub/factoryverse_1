@@ -71,7 +71,7 @@ interface PermissionActor {
   getPersonnelPermission(
     adminCode: string,
     loginCode: string,
-  ): Promise<PersonnelPermission | null>;
+  ): Promise<[] | [PersonnelPermission]>;
   setPersonnelPermission(
     adminCode: string,
     loginCode: string,
@@ -260,6 +260,15 @@ const ALL_MODULE_PAGES = MODULE_GROUPS.flatMap((g) =>
   g.modules.map((m) => m.page),
 );
 
+// Helper to unwrap ICP optional type ([] | [T]) to T | null
+function unwrapOptional<T>(val: [] | [T] | T | null | undefined): T | null {
+  if (val === null || val === undefined) return null;
+  if (Array.isArray(val)) {
+    return val.length > 0 ? (val[0] as T) : null;
+  }
+  return val as T;
+}
+
 function ModuleCheckboxGrid({
   selected,
   onToggle,
@@ -421,15 +430,21 @@ export function PermissionRolesPage() {
           personnelData.map((p) =>
             actor
               .getPersonnelPermission(adminCode, p.loginCode)
-              .then(
-                (perm) =>
-                  [p.loginCode, perm] as [string, PersonnelPermission | null],
-              ),
+              .then((perm) => {
+                // Unwrap ICP optional: perm is [] | [PersonnelPermission] at runtime
+                const actualPerm = unwrapOptional(perm);
+                return [p.loginCode, actualPerm] as [
+                  string,
+                  PersonnelPermission | null,
+                ];
+              }),
           ),
         ).then((permEntries) => {
           const permsMap: Record<string, PersonnelPermission> = {};
           for (const [code, perm] of permEntries) {
-            if (perm) permsMap[code] = perm;
+            if (perm !== null && perm !== undefined && !Array.isArray(perm)) {
+              permsMap[code] = perm;
+            }
           }
           setPermissionsMap(permsMap);
         });
@@ -515,8 +530,8 @@ export function PermissionRolesPage() {
   // Permission dialog handlers
   const openPermDialog = (person: Personnel) => {
     setEditingPerson(person);
-    const existing = permissionsMap[person.loginCode];
-    if (existing) {
+    const existing = permissionsMap[person.loginCode] ?? null;
+    if (existing !== null) {
       setPermRoleId(existing.roleId || "none");
       setAdditionalMods(new Set(existing.additionalModules));
       setRemovedMods(new Set(existing.removedModules));
@@ -792,10 +807,10 @@ export function PermissionRolesPage() {
             ) : (
               <div className="divide-y divide-slate-50">
                 {personnel.map((person, idx) => {
-                  const perm = permissionsMap[person.loginCode];
-                  const roleName = getRoleName(perm);
+                  const perm = permissionsMap[person.loginCode] ?? null;
+                  const roleName = getRoleName(perm ?? undefined);
                   const hasOverrides =
-                    perm &&
+                    perm !== null &&
                     (perm.additionalModules.length > 0 ||
                       perm.removedModules.length > 0);
 

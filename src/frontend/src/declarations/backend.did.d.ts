@@ -106,6 +106,23 @@ export interface VisitorEntry {
   'createdAt' : Time,
 }
 
+
+export interface PermissionRole {
+  'id': string,
+  'companyId': string,
+  'name': string,
+  'modules': Array<string>,
+  'createdAt': Time,
+}
+
+export interface PersonnelPermission {
+  'loginCode': string,
+  'companyId': string,
+  'roleId': string,
+  'additionalModules': Array<string>,
+  'removedModules': Array<string>,
+}
+
 export interface _SERVICE {
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
   'addMachine' : ActorMethod<
@@ -133,6 +150,13 @@ export interface _SERVICE {
   >,
   'updateMachineStatus' : ActorMethod<[string, string, string], Machine>,
   'updatePersonnelRole' : ActorMethod<[string, string, string], Personnel>,
+  'addPermissionRole': ActorMethod<[string, string, Array<string>], PermissionRole>,
+  'updatePermissionRole': ActorMethod<[string, string, string, Array<string>], PermissionRole>,
+  'deletePermissionRole': ActorMethod<[string, string], boolean>,
+  'getPermissionRoles': ActorMethod<[string], Array<PermissionRole>>,
+  'setPersonnelPermission': ActorMethod<[string, string, string, Array<string>, Array<string>], PersonnelPermission>,
+  'getPersonnelPermission': ActorMethod<[string, string], [] | [PersonnelPermission]>,
+  'getMyAllowedModules': ActorMethod<[string], [] | [Array<string>]>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];
