@@ -401,9 +401,16 @@ actor {
       case null { Runtime.trap("Invalid admin code") };
       case (?_) {};
     };
-    switch (personnel.get(personnelId)) {
-      case null { Runtime.trap("Personnel not found") };
-      case (?person) {
+    var foundKey : ?Text = null;
+    var foundPerson : ?Personnel = null;
+    for ((pid, person) in personnel.entries()) {
+      if (person.loginCode == personnelId) {
+        foundKey := ?pid;
+        foundPerson := ?person;
+      };
+    };
+    switch (foundKey, foundPerson) {
+      case (?pid, ?person) {
         let updated : Personnel = {
           name = person.name;
           role = role;
@@ -413,9 +420,10 @@ actor {
           companyId = person.companyId;
           createdAt = person.createdAt;
         };
-        personnel.add(personnelId, updated);
+        personnel.add(pid, updated);
         updated;
       };
+      case _ { Runtime.trap("Personnel not found") };
     };
   };
 
@@ -424,9 +432,16 @@ actor {
       case null { Runtime.trap("Invalid admin code") };
       case (?_) {};
     };
-    switch (personnel.get(personnelId)) {
-      case null { false };
-      case (?person) {
+    var foundKey : ?Text = null;
+    var foundPerson : ?Personnel = null;
+    for ((pid, person) in personnel.entries()) {
+      if (person.loginCode == personnelId) {
+        foundKey := ?pid;
+        foundPerson := ?person;
+      };
+    };
+    switch (foundKey, foundPerson) {
+      case (?pid, ?person) {
         let updated : Personnel = {
           name = person.name;
           role = person.role;
@@ -436,9 +451,10 @@ actor {
           companyId = null;
           createdAt = person.createdAt;
         };
-        personnel.add(personnelId, updated);
+        personnel.add(pid, updated);
         true;
       };
+      case _ { false };
     };
   };
 

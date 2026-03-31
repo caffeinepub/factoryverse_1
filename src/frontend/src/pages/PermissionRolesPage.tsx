@@ -78,6 +78,7 @@ interface PermissionActor {
     adminCode: string,
     loginCode: string,
     roleId: string,
+    customTitle: string,
     additionalModules: string[],
     removedModules: string[],
   ): Promise<PersonnelPermission>;
@@ -570,10 +571,11 @@ export function PermissionRolesPage() {
         session.userCode,
         editingPerson.loginCode,
         permRoleId === "none" ? "" : permRoleId,
+        permCustomTitle.trim(),
         Array.from(additionalMods),
         Array.from(removedMods),
       );
-      // Store customTitle in localStorage (backend compatibility)
+      // Also persist to localStorage as fallback for existing saved titles
       const titleKey = `factoryverse_ctitle_${editingPerson.loginCode}`;
       if (permCustomTitle.trim()) {
         localStorage.setItem(titleKey, permCustomTitle.trim());

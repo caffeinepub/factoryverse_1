@@ -581,7 +581,7 @@ export const idlService = IDL.Service({
   'updatePermissionRole' : IDL.Func([IDL.Text, IDL.Text, IDL.Text, IDL.Vec(IDL.Text)], [PermissionRole], []),
   'deletePermissionRole' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], []),
   'getPermissionRoles' : IDL.Func([IDL.Text], [IDL.Vec(PermissionRole)], ['query']),
-  'setPersonnelPermission' : IDL.Func([IDL.Text, IDL.Text, IDL.Text, IDL.Vec(IDL.Text), IDL.Vec(IDL.Text)], [PersonnelPermission], []),
+  'setPersonnelPermission' : IDL.Func([IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Vec(IDL.Text), IDL.Vec(IDL.Text)], [PersonnelPermission], []),
   'getPersonnelPermission' : IDL.Func([IDL.Text, IDL.Text], [IDL.Opt(PersonnelPermission)], ['query']),
   'getMyAllowedModules' : IDL.Func([IDL.Text], [IDL.Opt(IDL.Vec(IDL.Text))], ['query']),
 });
@@ -1065,7 +1065,7 @@ export const idlFactory = ({ IDL }) => {
     'updatePermissionRole' : IDL.Func([IDL.Text, IDL.Text, IDL.Text, IDL.Vec(IDL.Text)], [PermissionRole], []),
     'deletePermissionRole' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], []),
     'getPermissionRoles' : IDL.Func([IDL.Text], [IDL.Vec(PermissionRole)], ['query']),
-    'setPersonnelPermission' : IDL.Func([IDL.Text, IDL.Text, IDL.Text, IDL.Vec(IDL.Text), IDL.Vec(IDL.Text)], [PersonnelPermission], []),
+    'setPersonnelPermission' : IDL.Func([IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Vec(IDL.Text), IDL.Vec(IDL.Text)], [PersonnelPermission], []),
     'getPersonnelPermission' : IDL.Func([IDL.Text, IDL.Text], [IDL.Opt(PersonnelPermission)], ['query']),
     'getMyAllowedModules' : IDL.Func([IDL.Text], [IDL.Opt(IDL.Vec(IDL.Text))], ['query']),
   });

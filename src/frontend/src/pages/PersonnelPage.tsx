@@ -17,7 +17,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Loader2, Plus, UserMinus, Users } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { Loader2, Pencil, Plus, UserMinus, Users } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -43,6 +44,7 @@ const roleLabel: Record<string, string> = {
 export function PersonnelPage() {
   const { session } = useAuth();
   const { actor: rawActor } = useActor();
+  const qc = useQueryClient();
   const isAdmin = session?.userType === "admin";
   const adminCode = isAdmin ? (session?.userCode ?? null) : null;
   const personnelQuery = useGetPersonnel(adminCode);
@@ -57,6 +59,13 @@ export function PersonnelPage() {
   const [inviteCode, setInviteCode] = useState("");
   const [selectedRole, setSelectedRole] = useState("Technician");
   const [removeTarget, setRemoveTarget] = useState<Personnel | null>(null);
+
+  // Edit unvan state
+  const [editUnvanTarget, setEditUnvanTarget] = useState<Personnel | null>(
+    null,
+  );
+  const [editUnvanTitle, setEditUnvanTitle] = useState("");
+  const [editUnvanSaving, setEditUnvanSaving] = useState(false);
 
   const personnel = personnelQuery.data ?? [];
 
@@ -73,7 +82,13 @@ export function PersonnelPage() {
                 ? perm[0]
                 : null
               : perm;
-            return [p.loginCode, actual?.customTitle ?? ""] as [string, string];
+            // Also check localStorage as fallback for legacy titles
+            const localTitle =
+              localStorage.getItem(`factoryverse_ctitle_${p.loginCode}`) ?? "";
+            return [p.loginCode, actual?.customTitle || localTitle] as [
+              string,
+              string,
+            ];
           })
           .catch(() => [p.loginCode, ""] as [string, string]),
       ),
@@ -122,15 +137,75 @@ export function PersonnelPage() {
 
   const handleRemove = async () => {
     if (!removeTarget) return;
+    const target = removeTarget;
+    setRemoveTarget(null);
     try {
       await removeMutation.mutateAsync({
         adminCode: adminCode!,
-        personnelId: removeTarget.loginCode,
+        personnelId: target.loginCode,
       });
+      // Remove from cache immediately, then let invalidation refetch
+      qc.setQueryData(
+        ["personnel", adminCode],
+        (old: Personnel[] | undefined) =>
+          (old ?? []).filter((p) => p.loginCode !== target.loginCode),
+      );
+      await qc.invalidateQueries({ queryKey: ["personnel", adminCode] });
       toast.success("Personel kaldırıldı");
-      setRemoveTarget(null);
     } catch (e) {
       toast.error(`Hata: ${e instanceof Error ? e.message : "Bilinmeyen"}`);
+    }
+  };
+
+  const handleEditUnvanOpen = async (p: Personnel) => {
+    setEditUnvanTarget(p);
+    setEditUnvanTitle(permissionsMap[p.loginCode] ?? "");
+  };
+
+  const handleSaveUnvan = async () => {
+    if (!editUnvanTarget || !rawActor || !adminCode) return;
+    setEditUnvanSaving(true);
+    try {
+      const actor = rawActor as any;
+      const loginCode = editUnvanTarget.loginCode;
+      // Fetch current permission to preserve roleId and module overrides
+      const rawPerm = await actor.getPersonnelPermission(adminCode, loginCode);
+      const existing = Array.isArray(rawPerm)
+        ? rawPerm.length > 0
+          ? rawPerm[0]
+          : null
+        : rawPerm;
+      const roleId = existing?.roleId ?? "";
+      const additionalModules: string[] = existing?.additionalModules ?? [];
+      const removedModules: string[] = existing?.removedModules ?? [];
+      // Call setPersonnelPermission with 6 args including customTitle
+      await actor.setPersonnelPermission(
+        adminCode,
+        loginCode,
+        roleId,
+        editUnvanTitle.trim(),
+        additionalModules,
+        removedModules,
+      );
+      // Also persist to localStorage as fallback
+      if (editUnvanTitle.trim()) {
+        localStorage.setItem(
+          `factoryverse_ctitle_${loginCode}`,
+          editUnvanTitle.trim(),
+        );
+      } else {
+        localStorage.removeItem(`factoryverse_ctitle_${loginCode}`);
+      }
+      setPermissionsMap((prev) => ({
+        ...prev,
+        [loginCode]: editUnvanTitle.trim(),
+      }));
+      toast.success("Unvan güncellendi");
+      setEditUnvanTarget(null);
+    } catch (e) {
+      toast.error(`Hata: ${e instanceof Error ? e.message : "Bilinmeyen"}`);
+    } finally {
+      setEditUnvanSaving(false);
     }
   };
 
@@ -249,10 +324,23 @@ export function PersonnelPage() {
                           </SelectContent>
                         </Select>
                       </td>
-                      <td className="px-5 py-3 text-sm text-slate-600">
-                        {permissionsMap[p.loginCode] || (
-                          <span className="text-slate-300 text-xs">—</span>
-                        )}
+                      <td className="px-5 py-3">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm text-slate-600">
+                            {permissionsMap[p.loginCode] || (
+                              <span className="text-slate-300 text-xs">—</span>
+                            )}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleEditUnvanOpen(p)}
+                            className="p-1 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded transition-colors"
+                            title="Unvan düzenle"
+                            data-ocid={`personnel.edit_button.${i + 1}`}
+                          >
+                            <Pencil size={12} />
+                          </button>
+                        </div>
                       </td>
                       <td className="px-5 py-3">
                         <span
@@ -341,6 +429,56 @@ export function PersonnelPage() {
                 <Loader2 size={16} className="animate-spin" />
               ) : (
                 "Ekle"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Unvan Modal */}
+      <Dialog
+        open={!!editUnvanTarget}
+        onOpenChange={(o) => {
+          if (!o) setEditUnvanTarget(null);
+        }}
+      >
+        <DialogContent
+          aria-describedby="edit-unvan-desc"
+          data-ocid="personnel.edit_unvan.dialog"
+        >
+          <DialogHeader>
+            <DialogTitle className="font-display">Unvan Düzenle</DialogTitle>
+            <DialogDescription id="edit-unvan-desc">
+              <strong>{editUnvanTarget?.name}</strong> için özel unvan girin
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-2">
+            <Label className="mb-1.5 block">Unvan</Label>
+            <Input
+              value={editUnvanTitle}
+              onChange={(e) => setEditUnvanTitle(e.target.value)}
+              placeholder="Örn: Üretim Müdürü"
+              data-ocid="personnel.edit_unvan.input"
+            />
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setEditUnvanTarget(null)}
+              data-ocid="personnel.edit_unvan.cancel_button"
+            >
+              İptal
+            </Button>
+            <Button
+              className="bg-primary text-white"
+              onClick={handleSaveUnvan}
+              disabled={editUnvanSaving}
+              data-ocid="personnel.edit_unvan.save_button"
+            >
+              {editUnvanSaving ? (
+                <Loader2 size={16} className="animate-spin" />
+              ) : (
+                "Kaydet"
               )}
             </Button>
           </DialogFooter>

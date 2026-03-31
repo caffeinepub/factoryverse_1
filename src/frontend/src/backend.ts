@@ -443,8 +443,8 @@ export class Backend implements backendInterface {
     async getPermissionRoles(adminCode: string): Promise<any[]> {
         return this.actor.getPermissionRoles(adminCode);
     }
-    async setPersonnelPermission(adminCode: string, loginCode: string, roleId: string, additionalModules: string[], removedModules: string[]): Promise<any> {
-        return this.actor.setPersonnelPermission(adminCode, loginCode, roleId, additionalModules, removedModules);
+    async setPersonnelPermission(adminCode: string, loginCode: string, roleId: string, customTitle: string, additionalModules: string[], removedModules: string[]): Promise<any> {
+        return this.actor.setPersonnelPermission(adminCode, loginCode, roleId, customTitle, additionalModules, removedModules);
     }
     async getPersonnelPermission(adminCode: string, loginCode: string): Promise<any> {
         const result = await this.actor.getPersonnelPermission(adminCode, loginCode);
