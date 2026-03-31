@@ -47,6 +47,7 @@ interface PermissionRole {
 }
 
 interface PersonnelPermission {
+  customTitle: string;
   loginCode: string;
   companyId: string;
   roleId: string;
@@ -408,6 +409,7 @@ export function PermissionRolesPage() {
   const [additionalMods, setAdditionalMods] = useState<Set<string>>(new Set());
   const [removedMods, setRemovedMods] = useState<Set<string>>(new Set());
   const [permOverrideTab, setPermOverrideTab] = useState("additional");
+  const [permCustomTitle, setPermCustomTitle] = useState("");
 
   // Redirect non-admins
   useEffect(() => {
@@ -445,6 +447,13 @@ export function PermissionRolesPage() {
           for (const [code, perm] of permEntries) {
             if (perm !== null && perm !== undefined && !Array.isArray(perm)) {
               permsMap[code] = perm;
+            }
+          }
+          // Merge localStorage customTitles into permissionsMap
+          for (const code of Object.keys(permsMap)) {
+            const stored = localStorage.getItem(`factoryverse_ctitle_${code}`);
+            if (stored && !permsMap[code].customTitle) {
+              permsMap[code] = { ...permsMap[code], customTitle: stored };
             }
           }
           setPermissionsMap(permsMap);
@@ -536,10 +545,14 @@ export function PermissionRolesPage() {
       setPermRoleId(existing.roleId || "none");
       setAdditionalMods(new Set(existing.additionalModules));
       setRemovedMods(new Set(existing.removedModules));
+      const storedTitle =
+        localStorage.getItem(`factoryverse_ctitle_${person.loginCode}`) || "";
+      setPermCustomTitle(existing.customTitle || storedTitle);
     } else {
       setPermRoleId("none");
       setAdditionalMods(new Set());
       setRemovedMods(new Set());
+      setPermCustomTitle("");
     }
     setPermOverrideTab("additional");
     setPermDialogOpen(true);
@@ -547,6 +560,10 @@ export function PermissionRolesPage() {
 
   const savePerm = async () => {
     if (!actor || !session || !editingPerson) return;
+    if (permRoleId !== "none" && !permCustomTitle.trim()) {
+      toast.error("Unvan zorunludur");
+      return;
+    }
     setSaving(true);
     try {
       const perm = await actor.setPersonnelPermission(
@@ -556,9 +573,19 @@ export function PermissionRolesPage() {
         Array.from(additionalMods),
         Array.from(removedMods),
       );
+      // Store customTitle in localStorage (backend compatibility)
+      const titleKey = `factoryverse_ctitle_${editingPerson.loginCode}`;
+      if (permCustomTitle.trim()) {
+        localStorage.setItem(titleKey, permCustomTitle.trim());
+      } else {
+        localStorage.removeItem(titleKey);
+      }
       setPermissionsMap((prev) => ({
         ...prev,
-        [editingPerson.loginCode]: perm,
+        [editingPerson.loginCode]: {
+          ...perm,
+          customTitle: permCustomTitle.trim(),
+        },
       }));
       setPermDialogOpen(false);
       toast.success("Yetki kaydedildi");
@@ -849,6 +876,11 @@ export function PermissionRolesPage() {
                               Rol Yok
                             </Badge>
                           )}
+                          {perm?.customTitle && (
+                            <span className="text-xs text-slate-500">
+                              ({perm.customTitle})
+                            </span>
+                          )}
                           {hasOverrides && (
                             <Badge
                               variant="outline"
@@ -1055,6 +1087,25 @@ export function PermissionRolesPage() {
                     </p>
                   )}
                 </div>
+
+                {/* Custom Title */}
+                {permRoleId !== "none" && (
+                  <div>
+                    <Label className="mb-2 block text-slate-700">
+                      Unvan <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      value={permCustomTitle}
+                      onChange={(e) => setPermCustomTitle(e.target.value)}
+                      placeholder="Ör: Üretim Müdürü, Bakım Sorumlusu..."
+                      className="focus-visible:ring-indigo-500"
+                      data-ocid="permissions.personnel.title_input"
+                    />
+                    <p className="text-xs text-slate-400 mt-1">
+                      Bu personele özgü görünen unvan
+                    </p>
+                  </div>
+                )}
 
                 {/* Override tabs */}
                 <div>

@@ -322,6 +322,7 @@ export const PersonnelPermission = IDL.Record({
   'loginCode' : IDL.Text,
   'companyId' : IDL.Text,
   'roleId' : IDL.Text,
+  'customTitle' : IDL.Text,
   'additionalModules' : IDL.Vec(IDL.Text),
   'removedModules' : IDL.Vec(IDL.Text),
 });
@@ -807,6 +808,7 @@ export const idlFactory = ({ IDL }) => {
   });
   const PersonnelPermission = IDL.Record({
     'loginCode': IDL.Text, 'companyId': IDL.Text, 'roleId': IDL.Text,
+    'customTitle': IDL.Text,
     'additionalModules': IDL.Vec(IDL.Text), 'removedModules': IDL.Vec(IDL.Text),
   });
 

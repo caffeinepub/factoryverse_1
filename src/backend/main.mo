@@ -1,3 +1,4 @@
+// v54 redeploy
 import Map "mo:core/Map";
 import Text "mo:core/Text";
 import Array "mo:core/Array";
@@ -3344,8 +3345,19 @@ actor {
     removedModules : [Text];
   };
 
+  // Combined result type (not stored as stable) - includes customTitle
+  type PersonnelPermissionResult = {
+    loginCode : Text;
+    companyId : Text;
+    roleId : Text;
+    customTitle : Text;
+    additionalModules : [Text];
+    removedModules : [Text];
+  };
+
   stable var permissionRoles = Map.empty<Text, PermissionRole>();
   stable var personnelPermissions = Map.empty<Text, PersonnelPermission>();
+  stable var personnelCustomTitles = Map.empty<Text, Text>();
 
   public shared func addPermissionRole(adminCode : Text, roleName : Text, modules : [Text]) : async PermissionRole {
     let companyId = switch (verifyAdminCode(adminCode)) {
@@ -3405,7 +3417,7 @@ actor {
     };
   };
 
-  public shared func setPersonnelPermission(adminCode : Text, loginCode : Text, roleId : Text, additionalModules : [Text], removedModules : [Text]) : async PersonnelPermission {
+  public shared func setPersonnelPermission(adminCode : Text, loginCode : Text, roleId : Text, customTitle : Text, additionalModules : [Text], removedModules : [Text]) : async PersonnelPermissionResult {
     let companyId = switch (verifyAdminCode(adminCode)) {
       case null { Runtime.trap("Invalid admin code") };
       case (?c) { c };
@@ -3414,15 +3426,26 @@ actor {
       loginCode; companyId; roleId; additionalModules; removedModules;
     };
     personnelPermissions.add(loginCode, perm);
-    perm;
+    personnelCustomTitles.add(loginCode, customTitle);
+    { loginCode; companyId; roleId; customTitle; additionalModules; removedModules };
   };
 
-  public query func getPersonnelPermission(adminCode : Text, loginCode : Text) : async ?PersonnelPermission {
+  public query func getPersonnelPermission(adminCode : Text, loginCode : Text) : async ?PersonnelPermissionResult {
     switch (verifyAdminCode(adminCode)) {
       case null { return null };
       case (?_) {};
     };
-    personnelPermissions.get(loginCode);
+    switch (personnelPermissions.get(loginCode)) {
+      case null { null };
+      case (?perm) {
+        let title = switch (personnelCustomTitles.get(loginCode)) {
+          case null { "" };
+          case (?t) { t };
+        };
+        ?{ loginCode = perm.loginCode; companyId = perm.companyId; roleId = perm.roleId;
+           customTitle = title; additionalModules = perm.additionalModules; removedModules = perm.removedModules };
+      };
+    };
   };
 
   public query func getMyAllowedModules(loginCode : Text) : async ?[Text] {

@@ -19,11 +19,12 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Loader2, Plus, UserMinus, Users } from "lucide-react";
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import type { Personnel } from "../backend";
 import { AppLayout } from "../components/AppLayout";
 import { useAuth } from "../contexts/AuthContext";
+import { useActor } from "../hooks/useActor";
 import {
   useAddPersonnel,
   useGetPersonnel,
@@ -41,6 +42,7 @@ const roleLabel: Record<string, string> = {
 
 export function PersonnelPage() {
   const { session } = useAuth();
+  const { actor: rawActor } = useActor();
   const isAdmin = session?.userType === "admin";
   const adminCode = isAdmin ? (session?.userCode ?? null) : null;
   const personnelQuery = useGetPersonnel(adminCode);
@@ -49,11 +51,41 @@ export function PersonnelPage() {
   const removeMutation = useRemovePersonnel();
 
   const [addOpen, setAddOpen] = useState(false);
+  const [permissionsMap, setPermissionsMap] = useState<Record<string, string>>(
+    {},
+  );
   const [inviteCode, setInviteCode] = useState("");
   const [selectedRole, setSelectedRole] = useState("Technician");
   const [removeTarget, setRemoveTarget] = useState<Personnel | null>(null);
 
   const personnel = personnelQuery.data ?? [];
+
+  useEffect(() => {
+    if (!rawActor || !adminCode || !personnel.length) return;
+    const actor = rawActor as any;
+    Promise.all(
+      personnel.map((p: any) =>
+        actor
+          .getPersonnelPermission(adminCode, p.loginCode)
+          .then((perm: any) => {
+            const actual = Array.isArray(perm)
+              ? perm.length > 0
+                ? perm[0]
+                : null
+              : perm;
+            return [p.loginCode, actual?.customTitle ?? ""] as [string, string];
+          })
+          .catch(() => [p.loginCode, ""] as [string, string]),
+      ),
+    ).then((entries) => {
+      const map: Record<string, string> = {};
+      for (const [code, title] of entries) {
+        if (title) map[code] = title;
+      }
+      setPermissionsMap(map);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rawActor, adminCode, personnel]);
 
   const handleAdd = async () => {
     if (!inviteCode.trim()) {
@@ -167,16 +199,21 @@ export function PersonnelPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="bg-muted/40 border-b border-border">
-                    {["Ad Soyad", "Giriş Kodu", "Rol", "Durum", "İşlem"].map(
-                      (h) => (
-                        <th
-                          key={h}
-                          className="text-left px-5 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide"
-                        >
-                          {h}
-                        </th>
-                      ),
-                    )}
+                    {[
+                      "Ad Soyad",
+                      "Giriş Kodu",
+                      "Rol",
+                      "Unvan",
+                      "Durum",
+                      "İşlem",
+                    ].map((h) => (
+                      <th
+                        key={h}
+                        className="text-left px-5 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide"
+                      >
+                        {h}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>
@@ -211,6 +248,11 @@ export function PersonnelPage() {
                             ))}
                           </SelectContent>
                         </Select>
+                      </td>
+                      <td className="px-5 py-3 text-sm text-slate-600">
+                        {permissionsMap[p.loginCode] || (
+                          <span className="text-slate-300 text-xs">—</span>
+                        )}
                       </td>
                       <td className="px-5 py-3">
                         <span

@@ -141,6 +141,7 @@ export interface PersonnelPermission {
     loginCode: string;
     companyId: string;
     roleId: string;
+    customTitle: string;
     additionalModules: Array<string>;
     removedModules: Array<string>;
 }
@@ -202,7 +203,7 @@ export interface backendInterface {
     updatePermissionRole(adminCode: string, roleId: string, roleName: string, modules: Array<string>): Promise<PermissionRole>;
     deletePermissionRole(adminCode: string, roleId: string): Promise<boolean>;
     getPermissionRoles(adminCode: string): Promise<Array<PermissionRole>>;
-    setPersonnelPermission(adminCode: string, loginCode: string, roleId: string, additionalModules: Array<string>, removedModules: Array<string>): Promise<PersonnelPermission>;
+    setPersonnelPermission(adminCode: string, loginCode: string, roleId: string, customTitle: string, additionalModules: Array<string>, removedModules: Array<string>): Promise<PersonnelPermission>;
     getPersonnelPermission(adminCode: string, loginCode: string): Promise<PersonnelPermission | null>;
     getMyAllowedModules(loginCode: string): Promise<Array<string> | null>;
 }
